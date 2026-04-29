@@ -6,19 +6,19 @@ Una base sólida y reutilizable para proyectos Next.js, diseñada con los más a
 
 ## 🚀 Stack Tecnológico
 
-| Categoría | Tecnologías |
-|-----------|-------------|
-| **Framework** | Next.js 16 (App Router) |
-| **Lenguaje** | TypeScript 5 |
-| **Base de Datos** | PostgreSQL + Prisma 7 |
-| **Estilos** | Tailwind CSS 4 |
-| **Componentes** | shadcn/ui + Radix UI |
-| **Iconos** | Hugeicons React |
-| **Animaciones** | Framer Motion |
-| **HTTP Client** | Axios |
-| **Validación** | Zod |
-| **Notificaciones** | Sonner |
-| **Package Manager** | pnpm |
+| Categoría           | Tecnologías             |
+| ------------------- | ----------------------- |
+| **Framework**       | Next.js 16 (App Router) |
+| **Lenguaje**        | TypeScript 5            |
+| **Base de Datos**   | PostgreSQL + Prisma 7   |
+| **Estilos**         | Tailwind CSS 4          |
+| **Componentes**     | shadcn/ui + Radix UI    |
+| **Iconos**          | Hugeicons React         |
+| **Animaciones**     | Framer Motion           |
+| **HTTP Client**     | Axios                   |
+| **Validación**      | Zod                     |
+| **Notificaciones**  | Sonner                  |
+| **Package Manager** | pnpm                    |
 
 ## ✨ Características Principales
 
@@ -42,6 +42,7 @@ src/
 ### 🎯 Componentes Genéricos
 
 **DataTable** - Tabla de datos con:
+
 - Búsqueda integrada
 - Animaciones con Framer Motion
 - Contenido expandible
@@ -49,6 +50,7 @@ src/
 - Total de registros
 
 **GenericModal** - Modal reutilizable con:
+
 - Múltiples tamaños (sm, md, lg, xl, 2xl, 4xl)
 - Variantes de tema (default, dark)
 - Animaciones de entrada/salida
@@ -57,6 +59,7 @@ src/
 ### 🔐 Manejo de Errores
 
 **Backend (`apiError.handler`)**
+
 ```typescript
 throw new ApiError({
   status: httpStatus.NOT_FOUND,
@@ -65,6 +68,7 @@ throw new ApiError({
 ```
 
 **Frontend (`clientError.handler`)**
+
 ```typescript
 clientErrorHandler(error, callback, {
   showToast: true,
@@ -151,11 +155,9 @@ import { DataTable } from "@/components/common";
   data={users}
   keyExtractor={(item) => item.id}
   onSearch={handleSearch}
-  actions={
-    <Button onClick={handleCreate}>Nuevo Usuario</Button>
-  }
+  actions={<Button onClick={handleCreate}>Nuevo Usuario</Button>}
   onRowClick={(user) => handleEdit(user)}
-/>
+/>;
 ```
 
 ### Modal Genérico
@@ -239,14 +241,14 @@ Este proyecto sigue estándares estrictos de calidad:
 
 ## 📁 Estructura de Archivos Clave
 
-| Archivo | Propósito |
-|---------|-----------|
-| `src/constants/routes.ts` | Rutas de la app y API |
-| `src/constants/config.constant.ts` | Configuración global |
-| `src/constants/error-messages.constant.ts` | Mensajes de error |
-| `src/lib/prisma.ts` | Cliente Prisma singleton |
-| `src/utils/clientAxios.util.ts` | Instancia Axios configurada |
-| `src/components/common/` | Componentes reutilizables |
+| Archivo                                    | Propósito                   |
+| ------------------------------------------ | --------------------------- |
+| `src/constants/routes.ts`                  | Rutas de la app y API       |
+| `src/constants/config.constant.ts`         | Configuración global        |
+| `src/constants/error-messages.constant.ts` | Mensajes de error           |
+| `src/lib/prisma.ts`                        | Cliente Prisma singleton    |
+| `src/utils/clientAxios.util.ts`            | Instancia Axios configurada |
+| `src/components/common/`                   | Componentes reutilizables   |
 
 ## 🎯 Cuándo Usar Esta Plantilla
 

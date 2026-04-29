@@ -1,54 +1,57 @@
 import { prisma } from "@/lib/prisma";
+import { User, Role } from "@prisma/client";
 
 interface CreateUserDto {
+  email: string;
+  password: string;
   name: string;
+  role?: Role;
+}
+
+interface FindByEmailParams {
   email: string;
 }
 
-interface UpdateUserDto extends Partial<CreateUserDto> {}
-
 export const userRepository = {
-  async create(dto: CreateUserDto) {
-    return prisma.user.create({
-      data: dto,
-    });
-  },
-
-  async findById(id: string) {
+  async findById(id: string): Promise<User | null> {
     return prisma.user.findUnique({
       where: { id },
     });
   },
 
-  async findByEmail(email: string) {
+  async findByEmail({ email }: FindByEmailParams): Promise<User | null> {
     return prisma.user.findUnique({
       where: { email },
     });
   },
 
-  async update(id: string, dto: UpdateUserDto) {
+  async create(dto: CreateUserDto): Promise<User> {
+    return prisma.user.create({
+      data: {
+        email: dto.email,
+        password: dto.password,
+        name: dto.name,
+        role: dto.role ?? "SELLER",
+      },
+    });
+  },
+
+  async update(id: string, data: Partial<CreateUserDto>): Promise<User> {
     return prisma.user.update({
       where: { id },
-      data: dto,
+      data,
     });
   },
 
-  async delete(id: string) {
-    return prisma.user.delete({
+  async delete(id: string): Promise<void> {
+    await prisma.user.delete({
       where: { id },
     });
   },
 
-  async findAll(search?: string) {
-    const where = search
-      ? {
-          OR: [{ name: { contains: search } }, { email: { contains: search } }],
-        }
-      : {};
-
-    return prisma.user.findMany({
-      where,
-      orderBy: { createdAt: "desc" },
-    });
+  async findMany(): Promise<User[]> {
+    return prisma.user.findMany();
   },
 };
+
+export type UserRepository = typeof userRepository;

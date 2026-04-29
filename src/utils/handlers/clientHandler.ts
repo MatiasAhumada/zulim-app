@@ -1,5 +1,4 @@
 import { AxiosError } from "axios";
-import { ExternalToast } from "sonner";
 import {
   toastSuccess,
   toastError,
@@ -7,14 +6,6 @@ import {
   toastInfo,
 } from "@/utils/toast.util";
 import { ERROR_MESSAGES } from "@/constants/error-messages.constant";
-
-interface HandlerOptions {
-  logToConsole?: boolean;
-  showToast?: boolean;
-  messagePrefix?: string;
-  defaultMessage?: string;
-  toastOptions?: Partial<ExternalToast>;
-}
 
 function normalizeError(error: unknown): Error {
   if (error instanceof AxiosError) {
@@ -36,8 +27,11 @@ function normalizeError(error: unknown): Error {
   if (typeof error === "string") return new Error(error);
 
   if (error && typeof error === "object") {
-    if ("message" in error && typeof (error as any).message === "string") {
-      return new Error((error as any).message);
+    if (
+      "message" in error &&
+      typeof (error as Record<string, unknown>).message === "string"
+    ) {
+      return new Error((error as Record<string, unknown>).message as string);
     }
     return new Error(JSON.stringify(error));
   }
@@ -53,15 +47,19 @@ export function clientErrorHandler(
     showToast = true,
     messagePrefix = "",
     defaultMessage = "Error desconocido",
-    toastOptions = {},
-  }: HandlerOptions = {}
+  }: {
+    logToConsole?: boolean;
+    showToast?: boolean;
+    messagePrefix?: string;
+    defaultMessage?: string;
+  } = {},
 ): void {
   const normalizedError = normalizeError(error);
 
   if (logToConsole) console.error(normalizedError);
   if (showToast) {
     const displayMessage = normalizedError.message || defaultMessage;
-    toastError(`${messagePrefix}${displayMessage}`, toastOptions);
+    toastError(`${messagePrefix}${displayMessage}`);
   }
 
   callback();
@@ -71,14 +69,15 @@ export function clientSuccessHandler(
   message: string,
   callback = () => {},
   {
-    logToConsole = false,
     showToast = true,
     messagePrefix = "",
-    toastOptions = {},
-  }: Omit<HandlerOptions, "defaultMessage"> = {}
+  }: {
+    showToast?: boolean;
+    messagePrefix?: string;
+  } = {},
 ): void {
   if (showToast) {
-    toastSuccess(`${messagePrefix}${message}`, toastOptions);
+    toastSuccess(`${messagePrefix}${message}`);
   }
 
   callback();
@@ -91,12 +90,15 @@ export function clientWarningHandler(
     logToConsole = true,
     showToast = true,
     messagePrefix = "",
-    toastOptions = {},
-  }: Omit<HandlerOptions, "defaultMessage"> = {}
+  }: {
+    logToConsole?: boolean;
+    showToast?: boolean;
+    messagePrefix?: string;
+  } = {},
 ): void {
   if (logToConsole) console.warn(message);
   if (showToast) {
-    toastWarning(`${messagePrefix}${message}`, toastOptions);
+    toastWarning(`${messagePrefix}${message}`);
   }
 
   callback();
@@ -106,15 +108,15 @@ export function clientInfoHandler(
   message: string,
   callback = () => {},
   {
-    logToConsole = false,
     showToast = true,
     messagePrefix = "",
-    toastOptions = {},
-  }: Omit<HandlerOptions, "defaultMessage"> = {}
+  }: {
+    showToast?: boolean;
+    messagePrefix?: string;
+  } = {},
 ): void {
-  if (logToConsole) console.info(message);
   if (showToast) {
-    toastInfo(`${messagePrefix}${message}`, toastOptions);
+    toastInfo(`${messagePrefix}${message}`);
   }
 
   callback();
