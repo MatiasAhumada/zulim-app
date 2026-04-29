@@ -12,8 +12,12 @@
     "postinstall": "prisma generate",
     "migrate": "prisma migrate dev",
     "migrate:deploy": "prisma migrate deploy",
-    "reset": "prisma migrate reset",
-    "studio": "prisma studio"
+    "reset": "prisma migrate reset && pnpm seed",
+    "studio": "prisma studio",
+    "seed": "tsx prisma/seed.ts"
+  },
+  "prisma": {
+    "seed": "tsx prisma/seed.ts"
   },
   "dependencies": {
     "@hugeicons/core-free-icons": "^4.0.0",
