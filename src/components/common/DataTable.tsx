@@ -49,11 +49,11 @@ export function DataTable<T>({
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div className="lg:ml-0">
-          <h1 className="text-2xl sm:text-3xl font-bold text-white uppercase tracking-wide">
+          <h1 className="text-2xl sm:text-3xl font-bold text-[#2f184b] uppercase tracking-wide">
             {title}
           </h1>
           {subtitle && (
-            <p className="text-neutral-400 mt-1 text-sm sm:text-base">
+            <p className="text-[#4a4451] mt-1 text-sm sm:text-base">
               {subtitle}
             </p>
           )}
@@ -63,18 +63,18 @@ export function DataTable<T>({
         )}
       </div>
 
-      <div className="border border-neutral-800 rounded-xl shadow-lg bg-neutral-950">
+      <div className="border border-[#c8b1e4] rounded-xl shadow-lg bg-white">
         {onSearch && (
-          <div className="p-5 border-b border-neutral-800">
+          <div className="p-5 border-b border-[#c8b1e4]">
             <div className="relative flex-1 w-full sm:max-w-md">
               <Search01Icon
                 size={16}
-                className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400"
+                className="absolute left-3 top-1/2 -translate-y-1/2 text-[#4a4451]"
               />
               <Input
                 placeholder={searchPlaceholder}
                 onChange={(e) => onSearch(e.target.value)}
-                className="pl-10 bg-neutral-900 border-neutral-800 text-white placeholder:text-neutral-400 focus:border-red-600 focus:ring-red-600 text-sm"
+                className="pl-10 bg-white border-[#c8b1e4] text-[#2f184b] placeholder:text-[#4a4451]/50 focus:border-[#532b88] focus:ring-[#532b88] text-sm"
               />
             </div>
           </div>
@@ -84,7 +84,7 @@ export function DataTable<T>({
           <div className="w-full overflow-x-auto overflow-y-visible">
             <table className="w-full min-w-[800px]">
               <thead>
-                <tr className="border-b border-neutral-800 text-left text-xs font-semibold text-neutral-400 uppercase tracking-wider">
+                <tr className="border-b border-[#c8b1e4] text-left text-xs font-semibold text-[#4a4451] uppercase tracking-wider">
                   {columns.map((column) => (
                     <th
                       key={column.key}
@@ -100,10 +100,10 @@ export function DataTable<T>({
                   <tr>
                     <td
                       colSpan={columns.length}
-                      className="py-8 text-center text-neutral-400 font-medium"
+                      className="py-8 text-center text-[#4a4451] font-medium"
                     >
                       <div className="flex items-center justify-center gap-3">
-                        <div className="w-5 h-5 border-2 border-red-600 border-t-transparent rounded-full animate-spin" />
+                        <div className="w-5 h-5 border-2 border-[#532b88] border-t-transparent rounded-full animate-spin" />
                         Cargando...
                       </div>
                     </td>
@@ -112,7 +112,7 @@ export function DataTable<T>({
                   <tr>
                     <td
                       colSpan={columns.length}
-                      className="py-8 text-center text-neutral-400 font-medium"
+                      className="py-8 text-center text-[#4a4451] font-medium"
                     >
                       {emptyMessage}
                     </td>
@@ -129,14 +129,14 @@ export function DataTable<T>({
                           delay: shouldReduceMotion ? 0 : index * 0.03,
                         }}
                         onClick={() => onRowClick?.(item)}
-                        className={`border-b border-neutral-800 hover:bg-neutral-900/50 transition-colors ${
+                        className={`border-b border-[#c8b1e4] hover:bg-[#f4effa] transition-colors ${
                           onRowClick ? "cursor-pointer" : ""
                         }`}
                       >
                         {columns.map((column) => (
                           <td
                             key={column.key}
-                            className="py-4 text-sm font-medium text-white"
+                            className="py-4 text-sm font-medium text-[#2f184b]"
                           >
                             {column.render
                               ? column.render(item)
@@ -153,8 +153,8 @@ export function DataTable<T>({
           </div>
 
           {totalLabel && (
-            <div className="mt-4 pt-4 border-t border-neutral-800">
-              <p className="text-xs font-medium text-neutral-400 uppercase tracking-wider">
+            <div className="mt-4 pt-4 border-t border-[#c8b1e4]">
+              <p className="text-xs font-medium text-[#4a4451] uppercase tracking-wider">
                 {totalLabel}
               </p>
             </div>
