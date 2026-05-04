@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Cancel01Icon } from "hugeicons-react";
 import { useReducedMotion } from "framer-motion";
+import { UI_TEXT } from "@/constants/ui-text.constant";
 
 interface GenericModalProps {
   open: boolean;
@@ -163,8 +164,8 @@ export function ConfirmModal({
   description,
   onConfirm,
   onCancel,
-  confirmText = "Confirmar",
-  cancelText = "Cancelar",
+  confirmText = UI_TEXT.MODAL.CONFIRM_TEXT,
+  cancelText = UI_TEXT.MODAL.CANCEL_TEXT,
   variant = "default",
   loading = false,
 }: ConfirmModalProps) {
@@ -190,7 +191,7 @@ export function ConfirmModal({
             {cancelText}
           </Button>
           <Button variant={variant} onClick={handleConfirm} disabled={loading}>
-            {loading ? "Procesando..." : confirmText}
+            {loading ? UI_TEXT.MODAL.PROCESSING : confirmText}
           </Button>
         </>
       }

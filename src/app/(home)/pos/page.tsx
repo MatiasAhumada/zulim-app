@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Product } from "@/types/product.types";
 import { useReducedMotion } from "framer-motion";
+import { UI_TEXT } from "@/constants/ui-text.constant";
 
 interface CartItem {
   product: Product;
@@ -68,10 +69,10 @@ export default function POSPage() {
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
       >
-        <h1 className="text-4xl font-bold text-[#2f184b]">Punto de Venta</h1>
-        <p className="text-[#4a4451] mt-2">
-          Venta rápida con redondeo a centena
-        </p>
+        <h1 className="text-4xl font-bold text-[#2f184b]">
+          {UI_TEXT.PAGES.POS.TITLE}
+        </h1>
+        <p className="text-[#4a4451] mt-2">{UI_TEXT.PAGES.POS.SUBTITLE}</p>
       </motion.div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -84,7 +85,7 @@ export default function POSPage() {
           <Card className="border-2 border-[#c8b1e4] shadow-xl hover:shadow-2xl transition-shadow">
             <div className="p-6 border-b border-[#c8b1e4]/30 bg-gradient-to-r from-[#f4effa] via-white to-[#f4effa]">
               <h2 className="font-bold text-[#2f184b] text-xl flex items-center gap-2">
-                🔍 Buscar Producto
+                🔍 {UI_TEXT.PAGES.POS.SEARCH_PRODUCT}
               </h2>
             </div>
             <div className="p-6">
@@ -95,10 +96,10 @@ export default function POSPage() {
           <Card className="border-2 border-[#c8b1e4] shadow-xl hover:shadow-2xl transition-shadow">
             <div className="p-6 border-b border-[#c8b1e4]/30 bg-gradient-to-r from-[#f4effa] via-white to-[#f4effa] flex items-center justify-between">
               <h2 className="font-bold text-[#2f184b] text-xl flex items-center gap-2">
-                🛒 Carrito de Compras
+                🛒 {UI_TEXT.PAGES.POS.CART}
               </h2>
               <span className="px-4 py-2 bg-gradient-to-r from-[#532b88] to-[#724aa4] text-white text-sm rounded-full font-bold shadow-lg shadow-purple-500/30">
-                {cartItems.length} items
+                {cartItems.length} {UI_TEXT.PAGES.POS.ITEMS_COUNT}
               </span>
             </div>
             <div className="p-6">
@@ -120,7 +121,7 @@ export default function POSPage() {
           <Card className="border-2 border-[#c8b1e4] shadow-xl sticky top-24">
             <div className="p-6 border-b border-[#c8b1e4]/30 bg-gradient-to-r from-[#532b88] via-[#724aa4] to-[#532b88]">
               <h2 className="font-bold text-white text-xl flex items-center gap-2">
-                💵 Resumen de Venta
+                💵 {UI_TEXT.PAGES.POS.SUMMARY}
               </h2>
             </div>
             <div className="p-6 space-y-4">
@@ -130,7 +131,7 @@ export default function POSPage() {
                 className="w-full h-16 text-lg font-bold bg-gradient-to-r from-[#532b88] to-[#724aa4] hover:from-[#3c0e71] hover:to-[#532b88] shadow-xl shadow-purple-500/40 transition-all hover:scale-[1.02]"
                 disabled={cartItems.length === 0}
               >
-                💳 Cobrar Venta
+                💳 {UI_TEXT.PAGES.POS.CHARGE_BUTTON}
               </Button>
 
               <Button
@@ -139,7 +140,7 @@ export default function POSPage() {
                 onClick={() => setCartItems([])}
                 disabled={cartItems.length === 0}
               >
-                🗑️ Vaciar Carrito
+                🗑️ {UI_TEXT.PAGES.POS.CLEAR_CART}
               </Button>
             </div>
           </Card>
@@ -147,24 +148,24 @@ export default function POSPage() {
           <Card className="border-2 border-[#c8b1e4] shadow-xl">
             <div className="p-4 bg-gradient-to-r from-[#f4effa] to-white border-b border-[#c8b1e4]/30">
               <h3 className="font-bold text-[#2f184b] flex items-center gap-2">
-                ⌨️ Atajos de Teclado
+                ⌨️ {UI_TEXT.PAGES.POS.KEYBOARD_SHORTCUTS}
               </h3>
             </div>
             <div className="p-4 space-y-3 text-sm text-[#4a4451]">
               <div className="flex justify-between items-center">
-                <span>Buscar producto</span>
+                <span>{UI_TEXT.PAGES.POS.SHORTCUTS.SEARCH}</span>
                 <kbd className="px-3 py-1.5 bg-[#f4effa] border border-[#c8b1e4] rounded text-xs font-mono">
                   Ctrl+B
                 </kbd>
               </div>
               <div className="flex justify-between items-center">
-                <span>Seleccionar</span>
+                <span>{UI_TEXT.PAGES.POS.SHORTCUTS.SELECT}</span>
                 <kbd className="px-3 py-1.5 bg-[#f4effa] border border-[#c8b1e4] rounded text-xs font-mono">
                   Enter
                 </kbd>
               </div>
               <div className="flex justify-between items-center">
-                <span>Cancelar</span>
+                <span>{UI_TEXT.PAGES.POS.SHORTCUTS.CANCEL}</span>
                 <kbd className="px-3 py-1.5 bg-[#f4effa] border border-[#c8b1e4] rounded text-xs font-mono">
                   Esc
                 </kbd>

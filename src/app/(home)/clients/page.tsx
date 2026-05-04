@@ -4,6 +4,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { DataTable } from "@/components/common/DataTable";
 import { Button } from "@/components/ui/button";
+import { UI_TEXT } from "@/constants/ui-text.constant";
 
 interface Client {
   id: string;
@@ -51,19 +52,19 @@ export default function ClientsPage() {
   );
 
   const columns = [
-    { key: "name", label: "Cliente" },
-    { key: "taxId", label: "CUIT/CUIL" },
+    { key: "name", label: UI_TEXT.TABLE.COLUMNS.CLIENT },
+    { key: "taxId", label: UI_TEXT.TABLE.COLUMNS.CUIT },
     {
       key: "taxCondition",
-      label: "Condición",
+      label: UI_TEXT.TABLE.COLUMNS.CONDITION,
       render: (c: Client) => (
         <span className="px-2 py-1 bg-[#f4effa] text-[#532b88] rounded text-xs font-medium">
           {c.taxCondition}
         </span>
       ),
     },
-    { key: "email", label: "Email" },
-    { key: "address", label: "Dirección" },
+    { key: "email", label: UI_TEXT.TABLE.COLUMNS.EMAIL },
+    { key: "address", label: UI_TEXT.TABLE.COLUMNS.ADDRESS },
   ];
 
   return (
@@ -78,13 +79,15 @@ export default function ClientsPage() {
         className="flex justify-between items-center"
       >
         <div>
-          <h1 className="text-4xl font-bold text-[#2f184b]">Clientes</h1>
+          <h1 className="text-4xl font-bold text-[#2f184b]">
+            {UI_TEXT.PAGES.CLIENTS.TITLE}
+          </h1>
           <p className="text-[#4a4451] mt-2">
-            Gestión de clientes para facturación AFIP
+            {UI_TEXT.PAGES.CLIENTS.SUBTITLE}
           </p>
         </div>
         <Button className="bg-gradient-to-r from-[#532b88] to-[#724aa4] hover:from-[#3c0e71] hover:to-[#532b88] text-white shadow-lg shadow-purple-500/30 transition-all hover:scale-[1.02]">
-          + Nuevo Cliente
+          + {UI_TEXT.PAGES.CLIENTS.NEW_BUTTON}
         </Button>
       </motion.div>
 
@@ -99,9 +102,9 @@ export default function ClientsPage() {
           columns={columns}
           data={filteredClients}
           keyExtractor={(c) => c.id}
-          searchPlaceholder="Buscar por nombre o CUIT..."
+          searchPlaceholder={UI_TEXT.PAGES.CLIENTS.SEARCH_PLACEHOLDER}
           onSearch={setSearchQuery}
-          emptyMessage="No hay clientes registrados"
+          emptyMessage={UI_TEXT.PAGES.CLIENTS.EMPTY_MESSAGE}
         />
       </motion.div>
     </motion.div>

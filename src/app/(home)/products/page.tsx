@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Product } from "@/types/product.types";
 import { formatCurrency } from "@/utils/currency.util";
+import { UI_TEXT } from "@/constants/ui-text.constant";
 import {
   PackageIcon,
   AlertCircleIcon,
@@ -123,11 +124,11 @@ export default function ProductsPage() {
   );
 
   const columns = [
-    { key: "sku", label: "SKU", className: "w-24" },
-    { key: "name", label: "PRODUCTO" },
+    { key: "sku", label: UI_TEXT.TABLE.COLUMNS.SKU, className: "w-24" },
+    { key: "name", label: UI_TEXT.TABLE.COLUMNS.PRODUCT },
     {
       key: "unitType",
-      label: "UNIDAD",
+      label: UI_TEXT.TABLE.COLUMNS.UNIT,
       render: (p: Product) => (
         <span className="px-2 py-1 bg-[#f4effa] text-[#532b88] rounded text-xs font-semibold uppercase tracking-wider">
           {p.unitType}
@@ -136,7 +137,7 @@ export default function ProductsPage() {
     },
     {
       key: "stock",
-      label: "STOCK",
+      label: UI_TEXT.TABLE.COLUMNS.STOCK,
       render: (p: Product) => (
         <span
           className={
@@ -151,7 +152,7 @@ export default function ProductsPage() {
     },
     {
       key: "purchasePrice",
-      label: "COSTO",
+      label: UI_TEXT.TABLE.COLUMNS.COST,
       render: (p: Product) => (
         <span className="text-[#4a4451]">
           {formatCurrency(p.purchasePrice)}
@@ -160,7 +161,7 @@ export default function ProductsPage() {
     },
     {
       key: "salePrice",
-      label: "VENTA",
+      label: UI_TEXT.TABLE.COLUMNS.SALE,
       render: (p: Product) => (
         <span className="font-bold text-[#532b88]">
           {formatCurrency(p.salePrice)}
@@ -169,7 +170,7 @@ export default function ProductsPage() {
     },
     {
       key: "profitMargin",
-      label: "MARGEN",
+      label: UI_TEXT.TABLE.COLUMNS.MARGIN,
       render: (p: Product) => (
         <span
           className={
@@ -197,15 +198,15 @@ export default function ProductsPage() {
       >
         <div>
           <h1 className="text-3xl font-bold text-[#2f184b] tracking-tight">
-            Productos e Inventario
+            {UI_TEXT.PAGES.PRODUCTS.TITLE}
           </h1>
           <p className="text-[#4a4451] text-sm mt-1">
-            Gestión del catálogo y control de stock
+            {UI_TEXT.PAGES.PRODUCTS.SUBTITLE}
           </p>
         </div>
         <Button className="bg-[#532b88] hover:bg-[#9b72cf] text-white rounded-lg text-sm font-semibold flex items-center gap-2">
           <PlusSignIcon size={16} strokeWidth={2} />
-          Nuevo Producto
+          {UI_TEXT.PAGES.PRODUCTS.NEW_BUTTON}
         </Button>
       </motion.div>
 
@@ -226,7 +227,7 @@ export default function ProductsPage() {
             </div>
             <div>
               <p className="text-xs text-[#4a4451] font-semibold uppercase tracking-wider">
-                Total
+                {UI_TEXT.STATS.TOTAL}
               </p>
               <p className="text-2xl font-bold text-[#2f184b]">
                 {totalProducts}
@@ -245,7 +246,7 @@ export default function ProductsPage() {
             </div>
             <div>
               <p className="text-xs text-[#92400e] font-semibold uppercase tracking-wider">
-                Stock Bajo
+                {UI_TEXT.STATS.LOW_STOCK}
               </p>
               <p className="text-2xl font-bold text-[#92400e]">{lowStock}</p>
             </div>
@@ -262,7 +263,7 @@ export default function ProductsPage() {
             </div>
             <div>
               <p className="text-xs text-[#991b1b] font-semibold uppercase tracking-wider">
-                Sin Stock
+                {UI_TEXT.STATS.OUT_OF_STOCK}
               </p>
               <p className="text-2xl font-bold text-[#991b1b]">{outOfStock}</p>
             </div>
@@ -279,7 +280,7 @@ export default function ProductsPage() {
             </div>
             <div>
               <p className="text-xs text-[#4a4451] font-semibold uppercase tracking-wider">
-                Valor Total
+                {UI_TEXT.STATS.TOTAL_VALUE}
               </p>
               <p className="text-2xl font-bold text-[#532b88]">
                 {formatCurrency(totalValue)}
@@ -300,9 +301,9 @@ export default function ProductsPage() {
           columns={columns}
           data={filteredProducts}
           keyExtractor={(p) => p.id}
-          searchPlaceholder="Buscar por nombre o SKU..."
+          searchPlaceholder={UI_TEXT.PAGES.PRODUCTS.SEARCH_PLACEHOLDER}
           onSearch={setSearchQuery}
-          emptyMessage="No hay productos registrados"
+          emptyMessage={UI_TEXT.PAGES.PRODUCTS.EMPTY_MESSAGE}
         />
       </motion.div>
 
@@ -317,14 +318,14 @@ export default function ProductsPage() {
           className="border border-[#c8b1e4] text-[#2f184b] hover:bg-[#f4effa] hover:border-[#532b88] rounded-lg text-sm font-semibold flex items-center gap-2"
         >
           <Download01Icon size={16} strokeWidth={2} />
-          Importar Excel
+          {UI_TEXT.PAGES.PRODUCTS.IMPORT_EXCEL}
         </Button>
         <Button
           variant="outline"
           className="border border-[#c8b1e4] text-[#2f184b] hover:bg-[#f4effa] hover:border-[#532b88] rounded-lg text-sm font-semibold flex items-center gap-2"
         >
           <Upload01Icon size={16} strokeWidth={2} />
-          Exportar Excel
+          {UI_TEXT.PAGES.PRODUCTS.EXPORT_EXCEL}
         </Button>
       </motion.div>
     </motion.div>

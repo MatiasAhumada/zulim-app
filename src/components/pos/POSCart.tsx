@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { Product } from "@/types/product.types";
 import { formatCurrency } from "@/utils/currency.util";
+import { UI_TEXT } from "@/constants/ui-text.constant";
 
 interface CartItem {
   product: Product;
@@ -22,9 +23,11 @@ export function POSCart({ items, onUpdateQuantity, onRemove }: POSCartProps) {
         <div className="w-16 h-16 mb-4 rounded-full bg-[#f4effa] flex items-center justify-center">
           <span className="text-3xl">🛒</span>
         </div>
-        <p className="text-[#4a4451]">Carrito vacío</p>
+        <p className="text-[#4a4451]">
+          {UI_TEXT.POS_COMPONENTS.CART.EMPTY_TITLE}
+        </p>
         <p className="text-sm text-[#4a4451]/60 mt-1">
-          Buscar productos para agregar
+          {UI_TEXT.POS_COMPONENTS.CART.EMPTY_SUBTITLE}
         </p>
       </div>
     );
@@ -77,7 +80,7 @@ export function POSCart({ items, onUpdateQuantity, onRemove }: POSCartProps) {
               onClick={() => onRemove(item.product.id)}
               className="text-xs text-red-500 hover:underline"
             >
-              Eliminar
+              {UI_TEXT.POS_COMPONENTS.CART.REMOVE_BUTTON}
             </button>
           </div>
         </motion.div>

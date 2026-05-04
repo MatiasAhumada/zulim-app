@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { DataTable } from "@/components/common/DataTable";
+import { UI_TEXT } from "@/constants/ui-text.constant";
 
 interface User {
   id: string;
@@ -48,22 +49,22 @@ export default function UsersPage() {
   );
 
   const columns = [
-    { key: "name", label: "Nombre" },
-    { key: "email", label: "Email" },
+    { key: "name", label: UI_TEXT.TABLE.COLUMNS.NAME },
+    { key: "email", label: UI_TEXT.TABLE.COLUMNS.EMAIL },
     {
       key: "role",
-      label: "Rol",
+      label: UI_TEXT.TABLE.COLUMNS.ROLE,
       render: (u: User) => (
         <span
           className={`px-2 py-1 rounded text-xs font-medium ${u.role === "admin" ? "bg-[#532b88] text-white" : "bg-[#f4effa] text-[#532b88]"}`}
         >
-          {u.role === "admin" ? "Administrador" : "Vendedor"}
+          {u.role === "admin" ? UI_TEXT.ROLES.ADMIN : UI_TEXT.ROLES.SELLER}
         </span>
       ),
     },
     {
       key: "createdAt",
-      label: "Creado",
+      label: UI_TEXT.TABLE.COLUMNS.CREATED,
       render: (u: User) => u.createdAt.toLocaleDateString("es-AR"),
     },
   ];
@@ -80,11 +81,13 @@ export default function UsersPage() {
         className="flex justify-between items-center"
       >
         <div>
-          <h1 className="text-4xl font-bold text-[#2f184b]">Usuarios</h1>
-          <p className="text-[#4a4451] mt-2">Gestión de usuarios y permisos</p>
+          <h1 className="text-4xl font-bold text-[#2f184b]">
+            {UI_TEXT.PAGES.USERS.TITLE}
+          </h1>
+          <p className="text-[#4a4451] mt-2">{UI_TEXT.PAGES.USERS.SUBTITLE}</p>
         </div>
         <Button className="bg-gradient-to-r from-[#532b88] to-[#724aa4] hover:from-[#3c0e71] hover:to-[#532b88] text-white shadow-lg shadow-purple-500/30 transition-all hover:scale-[1.02]">
-          + Nuevo Usuario
+          + {UI_TEXT.PAGES.USERS.NEW_BUTTON}
         </Button>
       </motion.div>
 
@@ -99,9 +102,9 @@ export default function UsersPage() {
           columns={columns}
           data={filteredUsers}
           keyExtractor={(u) => u.id}
-          searchPlaceholder="Buscar usuario..."
+          searchPlaceholder={UI_TEXT.PAGES.USERS.SEARCH_PLACEHOLDER}
           onSearch={setSearchQuery}
-          emptyMessage="No hay usuarios registrados"
+          emptyMessage={UI_TEXT.PAGES.USERS.EMPTY_MESSAGE}
         />
       </motion.div>
     </motion.div>

@@ -3,36 +3,37 @@
 import { motion } from "framer-motion";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { UI_TEXT } from "@/constants/ui-text.constant";
 
 const reports = [
   {
-    title: "📊 Ventas por Período",
-    description: "Resumen de ventas diarias, semanales y mensuales",
+    title: UI_TEXT.REPORTS_LIST.SALES_PERIOD.TITLE,
+    description: UI_TEXT.REPORTS_LIST.SALES_PERIOD.DESCRIPTION,
     color: "from-blue-500 to-indigo-600",
   },
   {
-    title: "📈 Evolución de Precios",
-    description: "Historial de cambios de precio y métricas de inflación",
+    title: UI_TEXT.REPORTS_LIST.PRICE_EVOLUTION.TITLE,
+    description: UI_TEXT.REPORTS_LIST.PRICE_EVOLUTION.DESCRIPTION,
     color: "from-purple-500 to-pink-600",
   },
   {
-    title: "💰 Márgenes de Ganancia",
-    description: "Análisis de márgenes por producto y categoría",
+    title: UI_TEXT.REPORTS_LIST.PROFIT_MARGINS.TITLE,
+    description: UI_TEXT.REPORTS_LIST.PROFIT_MARGINS.DESCRIPTION,
     color: "from-emerald-500 to-teal-600",
   },
   {
-    title: "📦 Stock y Rotación",
-    description: "Productos con mayor rotación y alertas de stock",
+    title: UI_TEXT.REPORTS_LIST.STOCK_ROTATION.TITLE,
+    description: UI_TEXT.REPORTS_LIST.STOCK_ROTATION.DESCRIPTION,
     color: "from-amber-500 to-orange-600",
   },
   {
-    title: "👥 Clientes AFIP",
-    description: "Clientes por condición fiscal y facturación",
+    title: UI_TEXT.REPORTS_LIST.CLIENTS_AFIP.TITLE,
+    description: UI_TEXT.REPORTS_LIST.CLIENTS_AFIP.DESCRIPTION,
     color: "from-cyan-500 to-sky-600",
   },
   {
-    title: "📋 Arqueo de Caja",
-    description: "Resumen diario de ventas y métodos de pago",
+    title: UI_TEXT.REPORTS_LIST.CASH_REGISTER.TITLE,
+    description: UI_TEXT.REPORTS_LIST.CASH_REGISTER.DESCRIPTION,
     color: "from-rose-500 to-red-600",
   },
 ];
@@ -48,8 +49,10 @@ export default function ReportsPage() {
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
       >
-        <h1 className="text-4xl font-bold text-[#2f184b]">Reportes</h1>
-        <p className="text-[#4a4451] mt-2">Análisis y métricas del negocio</p>
+        <h1 className="text-4xl font-bold text-[#2f184b]">
+          {UI_TEXT.PAGES.REPORTS.TITLE}
+        </h1>
+        <p className="text-[#4a4451] mt-2">{UI_TEXT.PAGES.REPORTS.SUBTITLE}</p>
       </motion.div>
 
       <motion.div

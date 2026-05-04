@@ -3,6 +3,8 @@
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { useAuth } from "@/lib/hooks/useAuth";
+import { ROUTES } from "@/constants/routes";
+import { UI_TEXT } from "@/constants/ui-text.constant";
 import {
   DollarCircleIcon,
   PackageIcon,
@@ -17,30 +19,30 @@ import {
 
 const stats = [
   {
-    label: "VENTAS HOY",
+    label: UI_TEXT.STATS.SALES_TODAY,
     value: "$0",
-    subtitle: "Sin ventas registradas",
+    subtitle: UI_TEXT.STATS.NO_SALES,
     icon: DollarCircleIcon,
     iconColor: "#10b981",
   },
   {
-    label: "PRODUCTOS",
+    label: UI_TEXT.STATS.PRODUCTS,
     value: "5",
-    subtitle: "En catálogo",
+    subtitle: UI_TEXT.STATS.IN_CATALOG,
     icon: PackageIcon,
     iconColor: "#3b82f6",
   },
   {
-    label: "CLIENTES",
+    label: UI_TEXT.STATS.CLIENTS,
     value: "3",
-    subtitle: "Registrados",
+    subtitle: UI_TEXT.STATS.REGISTERED,
     icon: UserMultiple02Icon,
     iconColor: "#06b6d4",
   },
   {
-    label: "STOCK BAJO",
+    label: UI_TEXT.STATS.LOW_STOCK,
     value: "2",
-    subtitle: "Con poco stock",
+    subtitle: UI_TEXT.STATS.LOW_STOCK_COUNT,
     icon: AlertCircleIcon,
     iconColor: "#f59e0b",
   },
@@ -48,26 +50,26 @@ const stats = [
 
 const quickActions = [
   {
-    label: "Nueva Venta",
-    href: "/pos",
+    label: UI_TEXT.QUICK_ACTIONS.NEW_SALE,
+    href: ROUTES.POS,
     icon: ShoppingCart01Icon,
     iconColor: "#532b88",
   },
   {
-    label: "Productos",
-    href: "/products",
+    label: UI_TEXT.QUICK_ACTIONS.PRODUCTS,
+    href: ROUTES.PRODUCTS,
     icon: PackageIcon,
     iconColor: "#532b88",
   },
   {
-    label: "Reportes",
-    href: "/reports",
+    label: UI_TEXT.QUICK_ACTIONS.REPORTS,
+    href: ROUTES.REPORTS,
     icon: ChartLineData01Icon,
     iconColor: "#532b88",
   },
   {
-    label: "Clientes",
-    href: "/clients",
+    label: UI_TEXT.QUICK_ACTIONS.CLIENTS,
+    href: ROUTES.CLIENTS,
     icon: UserMultiple02Icon,
     iconColor: "#532b88",
   },
@@ -78,9 +80,9 @@ export default function DashboardPage() {
 
   const getGreeting = () => {
     const hour = new Date().getHours();
-    if (hour < 12) return "Buenos días";
-    if (hour < 18) return "Buenas tardes";
-    return "Buenas noches";
+    if (hour < 12) return UI_TEXT.GREETINGS.MORNING;
+    if (hour < 18) return UI_TEXT.GREETINGS.AFTERNOON;
+    return UI_TEXT.GREETINGS.EVENING;
   };
 
   return (
@@ -102,7 +104,7 @@ export default function DashboardPage() {
             {user?.name || "Usuario"}
           </h1>
           <p className="text-[#4a4451] text-sm mt-1">
-            Bienvenido al Sistema Integral ZULIM
+            {UI_TEXT.PAGES.DASHBOARD.WELCOME}
           </p>
         </div>
         <div className="hidden md:block text-right">
@@ -165,7 +167,7 @@ export default function DashboardPage() {
         transition={{ delay: 0.1 }}
       >
         <h2 className="text-sm font-semibold text-[#2f184b] mb-3 uppercase tracking-wider">
-          Acciones Rápidas
+          {UI_TEXT.QUICK_ACTIONS.TITLE}
         </h2>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
           {quickActions.map((action, index) => {
@@ -214,13 +216,13 @@ export default function DashboardPage() {
                 className="text-[#532b88]"
                 strokeWidth={2}
               />
-              Ventas Recientes
+              {UI_TEXT.PAGES.SALES.RECENT_SALES}
             </h3>
             <Link
-              href="/sales"
+              href={ROUTES.SALES}
               className="text-xs text-[#532b88] hover:text-[#9b72cf] font-semibold uppercase tracking-wider transition-colors"
             >
-              Ver todas →
+              {UI_TEXT.PAGES.SALES.VIEW_ALL} →
             </Link>
           </div>
           <div className="p-6">
@@ -231,13 +233,13 @@ export default function DashboardPage() {
                 strokeWidth={1.5}
               />
               <p className="text-[#4a4451] text-sm font-medium">
-                No hay ventas registradas hoy
+                {UI_TEXT.PAGES.SALES.NO_SALES_TODAY}
               </p>
               <Link
-                href="/pos"
+                href={ROUTES.POS}
                 className="inline-block mt-3 px-4 py-2 bg-[#532b88] hover:bg-[#9b72cf] text-white text-sm font-semibold rounded-lg transition-colors"
               >
-                Realizar Primera Venta
+                {UI_TEXT.PAGES.SALES.FIRST_SALE_BUTTON}
               </Link>
             </div>
           </div>
@@ -251,7 +253,7 @@ export default function DashboardPage() {
                 className="text-[#532b88]"
                 strokeWidth={2}
               />
-              Estado del Sistema
+              {UI_TEXT.SYSTEM_STATUS.TITLE}
             </h3>
           </div>
           <div className="p-4 space-y-2">
@@ -265,11 +267,11 @@ export default function DashboardPage() {
                   />
                 </div>
                 <span className="text-[#166534] text-sm font-semibold">
-                  Base de Datos
+                  {UI_TEXT.SYSTEM_STATUS.DATABASE}
                 </span>
               </div>
               <span className="text-[#166534] text-xs font-semibold px-2 py-1 bg-[#dcfce7] rounded">
-                Conectada
+                {UI_TEXT.SYSTEM_STATUS.CONNECTED}
               </span>
             </div>
             <div className="flex items-center justify-between p-3 bg-[#f0fdf4] border border-[#86efac] rounded-lg">
@@ -282,11 +284,11 @@ export default function DashboardPage() {
                   />
                 </div>
                 <span className="text-[#166534] text-sm font-semibold">
-                  AFIP
+                  {UI_TEXT.SYSTEM_STATUS.AFIP}
                 </span>
               </div>
               <span className="text-[#166534] text-xs font-semibold px-2 py-1 bg-[#dcfce7] rounded">
-                Activa
+                {UI_TEXT.SYSTEM_STATUS.ACTIVE}
               </span>
             </div>
             <div className="flex items-center justify-between p-3 bg-[#fffbeb] border border-[#fde68a] rounded-lg">
@@ -299,11 +301,11 @@ export default function DashboardPage() {
                   />
                 </div>
                 <span className="text-[#92400e] text-sm font-semibold">
-                  Sincronización
+                  {UI_TEXT.SYSTEM_STATUS.SYNC}
                 </span>
               </div>
               <span className="text-[#92400e] text-xs font-semibold px-2 py-1 bg-[#fef3c7] rounded">
-                Pendiente
+                {UI_TEXT.SYSTEM_STATUS.PENDING}
               </span>
             </div>
           </div>

@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { motion, AnimatePresence } from "framer-motion";
 import { Product } from "@/types/product.types";
 import { formatCurrency } from "@/utils/currency.util";
+import { UI_TEXT } from "@/constants/ui-text.constant";
 
 interface ProductSearchProps {
   onSelectProduct: (product: Product) => void;
@@ -114,7 +115,7 @@ export function ProductSearch({ onSelectProduct }: ProductSearchProps) {
   return (
     <div className="relative w-full">
       <Input
-        placeholder="Buscar producto por nombre o SKU... (Ctrl+B)"
+        placeholder={UI_TEXT.POS_COMPONENTS.SEARCH.PLACEHOLDER}
         value={query}
         onChange={(e) => setQuery(e.target.value)}
         className="w-full h-12 text-base bg-white border-2 border-[#c8b1e4] focus:border-[#532b88] focus:ring-2 focus:ring-[#532b88]/20 rounded-lg"
@@ -143,14 +144,17 @@ export function ProductSearch({ onSelectProduct }: ProductSearchProps) {
               >
                 <div>
                   <p className="font-medium text-[#2f184b]">{product.name}</p>
-                  <p className="text-sm text-[#4a4451]">SKU: {product.sku}</p>
+                  <p className="text-sm text-[#4a4451]">
+                    {UI_TEXT.POS_COMPONENTS.SEARCH.SKU_LABEL} {product.sku}
+                  </p>
                 </div>
                 <div className="text-right">
                   <p className="font-bold text-[#532b88]">
                     {formatCurrency(product.salePrice)}
                   </p>
                   <p className="text-xs text-[#4a4451]">
-                    Stock: {product.stock} {product.unitType}
+                    {UI_TEXT.POS_COMPONENTS.SEARCH.STOCK_LABEL} {product.stock}{" "}
+                    {product.unitType}
                   </p>
                 </div>
               </li>

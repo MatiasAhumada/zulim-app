@@ -7,6 +7,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { motion } from "framer-motion";
+import { ROUTES } from "@/constants/routes";
+import { UI_TEXT } from "@/constants/ui-text.constant";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -18,7 +20,7 @@ export default function LoginPage() {
 
   useEffect(() => {
     if (!isLoading && isAuthenticated) {
-      router.push("/");
+      router.push(ROUTES.HOME);
     }
   }, [isAuthenticated, isLoading, router]);
 
@@ -29,9 +31,9 @@ export default function LoginPage() {
 
     try {
       await login(email, password);
-      router.push("/");
+      router.push(ROUTES.HOME);
     } catch {
-      setError("Email o contraseña incorrectos");
+      setError(UI_TEXT.PAGES.LOGIN.ERROR);
     } finally {
       setIsSubmitting(false);
     }
@@ -78,34 +80,38 @@ export default function LoginPage() {
             >
               <span className="text-white font-bold text-4xl">Z</span>
             </motion.div>
-            <h1 className="text-3xl font-bold text-white">ZULIM</h1>
-            <p className="text-purple-300 mt-2">Sistema Integral de Gestión</p>
+            <h1 className="text-3xl font-bold text-white">
+              {UI_TEXT.PAGES.LOGIN.TITLE}
+            </h1>
+            <p className="text-purple-300 mt-2">
+              {UI_TEXT.PAGES.LOGIN.SUBTITLE}
+            </p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
               <Label className="text-purple-200 text-sm mb-2 block">
-                Email
+                {UI_TEXT.PAGES.LOGIN.EMAIL_LABEL}
               </Label>
               <Input
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className="h-12 bg-white/10 border-white/20 text-white placeholder:text-purple-300/50 focus:border-[#9b72cf] focus:ring-[#9b72cf]"
-                placeholder="admin@zulim.com"
+                placeholder={UI_TEXT.PAGES.LOGIN.EMAIL_PLACEHOLDER}
                 required
               />
             </div>
             <div>
               <Label className="text-purple-200 text-sm mb-2 block">
-                Contraseña
+                {UI_TEXT.PAGES.LOGIN.PASSWORD_LABEL}
               </Label>
               <Input
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 className="h-12 bg-white/10 border-white/20 text-white placeholder:text-purple-300/50 focus:border-[#9b72cf] focus:ring-[#9b72cf]"
-                placeholder="••••••••"
+                placeholder={UI_TEXT.PAGES.LOGIN.PASSWORD_PLACEHOLDER}
                 required
               />
             </div>
@@ -128,20 +134,20 @@ export default function LoginPage() {
               {isSubmitting ? (
                 <span className="flex items-center gap-2">
                   <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                  Ingresando...
+                  {UI_TEXT.PAGES.LOGIN.LOGGING_IN}
                 </span>
               ) : (
-                "Iniciar Sesión"
+                UI_TEXT.PAGES.LOGIN.LOGIN_BUTTON
               )}
             </Button>
           </form>
 
           <div className="mt-8 pt-6 border-t border-white/10 text-center">
             <p className="text-purple-300/60 text-sm">
-              Credenciales de prueba:
+              {UI_TEXT.PAGES.LOGIN.TEST_CREDENTIALS}
             </p>
             <p className="text-purple-200 text-sm mt-1">
-              admin@zulim.com / admin123
+              {UI_TEXT.PAGES.LOGIN.TEST_CREDENTIALS_VALUE}
             </p>
           </div>
         </div>

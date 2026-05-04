@@ -7,6 +7,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useReducedMotion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { ROUTES } from "@/constants/routes";
+import { UI_TEXT } from "@/constants/ui-text.constant";
 import { useAuth } from "@/lib/hooks/useAuth";
 import {
   Home01Icon,
@@ -33,50 +34,50 @@ interface NavItem {
 
 const NAV_ITEMS: NavItem[] = [
   {
-    label: "Dashboard",
-    href: "/",
+    label: UI_TEXT.SIDEBAR.NAV_ITEMS.DASHBOARD,
+    href: ROUTES.DASHBOARD,
     icon: Home01Icon,
     gradient: "from-violet-500 to-purple-600",
     roles: ["admin", "seller"],
   },
   {
-    label: "Punto de Venta",
-    href: "/pos",
+    label: UI_TEXT.SIDEBAR.NAV_ITEMS.POS,
+    href: ROUTES.POS,
     icon: ShoppingCart01Icon,
     gradient: "from-fuchsia-500 to-pink-600",
     roles: ["admin", "seller"],
   },
   {
-    label: "Productos",
-    href: "/products",
+    label: UI_TEXT.SIDEBAR.NAV_ITEMS.PRODUCTS,
+    href: ROUTES.PRODUCTS,
     icon: PackageIcon,
     gradient: "from-indigo-500 to-blue-600",
     roles: ["admin"],
   },
   {
-    label: "Ventas",
-    href: "/sales",
+    label: UI_TEXT.SIDEBAR.NAV_ITEMS.SALES,
+    href: ROUTES.SALES,
     icon: DollarCircleIcon,
     gradient: "from-emerald-500 to-teal-600",
     roles: ["admin", "seller"],
   },
   {
-    label: "Clientes",
-    href: "/clients",
+    label: UI_TEXT.SIDEBAR.NAV_ITEMS.CLIENTS,
+    href: ROUTES.CLIENTS,
     icon: UserMultiple02Icon,
     gradient: "from-cyan-500 to-sky-600",
     roles: ["admin"],
   },
   {
-    label: "Reportes",
-    href: "/reports",
+    label: UI_TEXT.SIDEBAR.NAV_ITEMS.REPORTS,
+    href: ROUTES.REPORTS,
     icon: ChartLineData01Icon,
     gradient: "from-rose-500 to-red-600",
     roles: ["admin"],
   },
   {
-    label: "Usuarios",
-    href: "/users",
+    label: UI_TEXT.SIDEBAR.NAV_ITEMS.USERS,
+    href: ROUTES.USERS,
     icon: UserIcon,
     gradient: "from-slate-500 to-zinc-600",
     roles: ["admin"],
@@ -103,7 +104,7 @@ export function Sidebar({
 
   const handleLogout = async () => {
     await logout();
-    router.push("/login");
+    router.push(ROUTES.LOGIN);
   };
 
   const sidebarVariants = {
@@ -138,9 +139,11 @@ export function Sidebar({
                 </div>
                 <div>
                   <span className="font-bold text-white text-lg tracking-wide">
-                    ZULIM
+                    {UI_TEXT.SIDEBAR.BRAND_NAME}
                   </span>
-                  <p className="text-xs text-purple-300">Sistema ERP</p>
+                  <p className="text-xs text-purple-300">
+                    {UI_TEXT.SIDEBAR.BRAND_SUBTITLE}
+                  </p>
                 </div>
               </motion.div>
             ) : (
@@ -230,10 +233,12 @@ export function Sidebar({
               </div>
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-medium text-white truncate">
-                  {user?.name || "Usuario"}
+                  {user?.name || UI_TEXT.SIDEBAR.USER_DEFAULT}
                 </p>
                 <p className="text-xs text-purple-300">
-                  {user?.role === "ADMIN" ? "Administrador" : "Vendedor"}
+                  {user?.role === "ADMIN"
+                    ? UI_TEXT.ROLES.ADMIN
+                    : UI_TEXT.ROLES.SELLER}
                 </p>
               </div>
               <button

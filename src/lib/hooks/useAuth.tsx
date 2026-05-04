@@ -8,6 +8,7 @@ import {
   ReactNode,
 } from "react";
 import axios from "axios";
+import { API_ROUTES } from "@/constants/routes";
 
 interface User {
   id: string;
@@ -34,7 +35,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const checkSession = async () => {
     try {
-      const response = await axios.get("/api/auth/session", {
+      const response = await axios.get(API_ROUTES.AUTH.SESSION, {
         withCredentials: true,
       });
 
@@ -55,7 +56,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const login = async (email: string, password: string) => {
     const response = await axios.post(
-      "/api/auth",
+      API_ROUTES.AUTH.LOGIN,
       { action: "login", email, password },
       { withCredentials: true },
     );
@@ -69,7 +70,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const logout = async () => {
     try {
       await axios.post(
-        "/api/auth",
+        API_ROUTES.AUTH.LOGOUT,
         { action: "logout" },
         { withCredentials: true },
       );

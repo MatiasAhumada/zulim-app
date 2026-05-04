@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Search01Icon } from "hugeicons-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useReducedMotion } from "framer-motion";
+import { UI_TEXT } from "@/constants/ui-text.constant";
 
 interface Column<T> {
   key: string;
@@ -34,9 +35,9 @@ export function DataTable<T>({
   columns,
   data,
   keyExtractor,
-  emptyMessage = "No hay datos disponibles",
+  emptyMessage = UI_TEXT.DATA_TABLE.EMPTY_MESSAGE,
   loading = false,
-  searchPlaceholder = "Buscar...",
+  searchPlaceholder = UI_TEXT.DATA_TABLE.SEARCH_PLACEHOLDER,
   onSearch,
   actions,
   totalLabel,
@@ -104,7 +105,7 @@ export function DataTable<T>({
                     >
                       <div className="flex items-center justify-center gap-3">
                         <div className="w-5 h-5 border-2 border-[#532b88] border-t-transparent rounded-full animate-spin" />
-                        Cargando...
+                        {UI_TEXT.DATA_TABLE.LOADING}
                       </div>
                     </td>
                   </tr>
