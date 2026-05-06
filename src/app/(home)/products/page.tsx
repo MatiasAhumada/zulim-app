@@ -1,333 +1,223 @@
 "use client";
 
-import { useState } from "react";
-import { motion } from "framer-motion";
+import { useState, useEffect } from "react";
 import { DataTable } from "@/components/common/DataTable";
+import { ProductModal } from "@/components/products/ProductModal";
+import { ConfirmModal } from "@/components/common/GenericModal";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { Product } from "@/types/product.types";
+import { Product, CreateProductDto } from "@/types/product.types";
+import { productService } from "@/services/product.service";
+import { PRODUCT_TABLE, PRODUCT_MODAL, PRODUCT_MESSAGES, UNIT_TYPE_LABELS } from "@/constants/product.constant";
+import { clientSuccessHandler, clientErrorHandler } from "@/utils/handlers/clientError.handler";
+import { Add01Icon, ViewIcon, PencilEdit02Icon, Delete02Icon } from "hugeicons-react";
 import { formatCurrency } from "@/utils/currency.util";
-import { UI_TEXT } from "@/constants/ui-text.constant";
-import {
-  PackageIcon,
-  AlertCircleIcon,
-  DollarCircleIcon,
-  Download01Icon,
-  Upload01Icon,
-  PlusSignIcon,
-} from "hugeicons-react";
-
-const mockProducts: Product[] = [
-  {
-    id: "1",
-    name: "Carne Molida",
-    sku: "CAR-001",
-    unitType: "KG",
-    stock: 50,
-    salePrice: 2500,
-    purchasePrice: 1800,
-    profitMargin: 28,
-    retailPrice: 2500,
-    wholesalePrice: 2200,
-    minSaleQuantity: 1,
-    maxSaleQuantity: null,
-    description: "Carne molida de primera",
-    createdAt: new Date(),
-    updatedAt: new Date(),
-  },
-  {
-    id: "2",
-    name: "Pollo Entero",
-    sku: "POL-001",
-    unitType: "KG",
-    stock: 30,
-    salePrice: 1200,
-    purchasePrice: 900,
-    profitMargin: 25,
-    retailPrice: 1200,
-    wholesalePrice: 1050,
-    minSaleQuantity: 1,
-    maxSaleQuantity: null,
-    description: null,
-    createdAt: new Date(),
-    updatedAt: new Date(),
-  },
-  {
-    id: "3",
-    name: "Harina de Trigo",
-    sku: "HAR-001",
-    unitType: "KG",
-    stock: 100,
-    salePrice: 450,
-    purchasePrice: 300,
-    profitMargin: 33,
-    retailPrice: 450,
-    wholesalePrice: 380,
-    minSaleQuantity: 1,
-    maxSaleQuantity: null,
-    description: null,
-    createdAt: new Date(),
-    updatedAt: new Date(),
-  },
-  {
-    id: "4",
-    name: "Azúcar",
-    sku: "AZU-001",
-    unitType: "KG",
-    stock: 200,
-    salePrice: 380,
-    purchasePrice: 250,
-    profitMargin: 34,
-    retailPrice: 380,
-    wholesalePrice: 320,
-    minSaleQuantity: 1,
-    maxSaleQuantity: null,
-    description: null,
-    createdAt: new Date(),
-    updatedAt: new Date(),
-  },
-  {
-    id: "5",
-    name: "Fideos",
-    sku: "FID-001",
-    unitType: "UNIT",
-    stock: 150,
-    salePrice: 290,
-    purchasePrice: 200,
-    profitMargin: 31,
-    retailPrice: 290,
-    wholesalePrice: 250,
-    minSaleQuantity: 1,
-    maxSaleQuantity: null,
-    description: null,
-    createdAt: new Date(),
-    updatedAt: new Date(),
-  },
-];
 
 export default function ProductsPage() {
-  const [searchQuery, setSearchQuery] = useState("");
-  const [products] = useState(mockProducts);
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [modalOpen, setModalOpen] = useState(false);
+  const [modalMode, setModalMode] = useState<"create" | "edit" | "view">("create");
+  const [selectedProduct, setSelectedProduct] = useState<Product | undefined>();
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [productToDelete, setProductToDelete] = useState<Product | null>(null);
+  const [submitting, setSubmitting] = useState(false);
 
-  const filteredProducts = products.filter(
-    (p) =>
-      p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      p.sku.toLowerCase().includes(searchQuery.toLowerCase()),
-  );
+  const loadProducts = async (search?: string) => {
+    try {
+      setLoading(true);
+      const data = await productService.findAll(search);
+      setProducts(data);
+    } catch (error) {
+      clientErrorHandler(error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-  const totalProducts = products.length;
-  const lowStock = products.filter((p) => p.stock < 20).length;
-  const outOfStock = products.filter((p) => p.stock === 0).length;
-  const totalValue = products.reduce(
-    (sum, p) => sum + p.purchasePrice * p.stock,
-    0,
-  );
+  useEffect(() => {
+    loadProducts();
+  }, []);
+
+  const handleSearch = (value: string) => {
+    setSearchTerm(value);
+    loadProducts(value);
+  };
+
+  const handleCreate = () => {
+    setModalMode("create");
+    setSelectedProduct(undefined);
+    setModalOpen(true);
+  };
+
+  const handleView = (product: Product) => {
+    setModalMode("view");
+    setSelectedProduct(product);
+    setModalOpen(true);
+  };
+
+  const handleEdit = (product: Product) => {
+    setModalMode("edit");
+    setSelectedProduct(product);
+    setModalOpen(true);
+  };
+
+  const handleDeleteClick = (product: Product) => {
+    setProductToDelete(product);
+    setDeleteModalOpen(true);
+  };
+
+  const handleSubmit = async (data: CreateProductDto) => {
+    try {
+      setSubmitting(true);
+
+      if (modalMode === "create") {
+        await productService.create(data);
+        clientSuccessHandler(PRODUCT_MESSAGES.CREATE_SUCCESS);
+      } else if (modalMode === "edit" && selectedProduct) {
+        await productService.update(selectedProduct.id, data);
+        clientSuccessHandler(PRODUCT_MESSAGES.UPDATE_SUCCESS);
+      }
+
+      setModalOpen(false);
+      loadProducts(searchTerm);
+    } catch (error) {
+      clientErrorHandler(error);
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const handleDelete = async () => {
+    if (!productToDelete) return;
+
+    try {
+      setSubmitting(true);
+      await productService.delete(productToDelete.id);
+      clientSuccessHandler(PRODUCT_MESSAGES.DELETE_SUCCESS);
+      setDeleteModalOpen(false);
+      loadProducts(searchTerm);
+    } catch (error) {
+      clientErrorHandler(error);
+    } finally {
+      setSubmitting(false);
+    }
+  };
 
   const columns = [
-    { key: "sku", label: UI_TEXT.TABLE.COLUMNS.SKU, className: "w-24" },
-    { key: "name", label: UI_TEXT.TABLE.COLUMNS.PRODUCT },
+    {
+      key: "sku",
+      label: "SKU",
+      render: (product: Product) => (
+        <span className="font-mono text-xs">{product.sku}</span>
+      ),
+    },
+    {
+      key: "name",
+      label: "Nombre",
+      render: (product: Product) => (
+        <span className="font-semibold">{product.name}</span>
+      ),
+    },
     {
       key: "unitType",
-      label: UI_TEXT.TABLE.COLUMNS.UNIT,
-      render: (p: Product) => (
-        <span className="px-2 py-1 bg-[#f4effa] text-[#532b88] rounded text-xs font-semibold uppercase tracking-wider">
-          {p.unitType}
-        </span>
+      label: "Unidad",
+      render: (product: Product) => (
+        <span className="text-neutral-400">{UNIT_TYPE_LABELS[product.unitType]}</span>
       ),
     },
     {
       key: "stock",
-      label: UI_TEXT.TABLE.COLUMNS.STOCK,
-      render: (p: Product) => (
-        <span
-          className={
-            p.stock < 20
-              ? "text-red-600 font-bold"
-              : "text-[#2f184b] font-semibold"
-          }
-        >
-          {p.stock} {p.unitType}
-        </span>
-      ),
-    },
-    {
-      key: "purchasePrice",
-      label: UI_TEXT.TABLE.COLUMNS.COST,
-      render: (p: Product) => (
-        <span className="text-[#4a4451]">
-          {formatCurrency(p.purchasePrice)}
+      label: "Stock",
+      render: (product: Product) => (
+        <span className={product.stock <= 10 ? "text-red-500 font-semibold" : ""}>
+          {product.stock}
         </span>
       ),
     },
     {
       key: "salePrice",
-      label: UI_TEXT.TABLE.COLUMNS.SALE,
-      render: (p: Product) => (
-        <span className="font-bold text-[#532b88]">
-          {formatCurrency(p.salePrice)}
+      label: "Precio Venta",
+      render: (product: Product) => (
+        <span className="font-semibold text-green-500">
+          {formatCurrency(product.salePrice)}
         </span>
       ),
     },
     {
-      key: "profitMargin",
-      label: UI_TEXT.TABLE.COLUMNS.MARGIN,
-      render: (p: Product) => (
-        <span
-          className={
-            p.profitMargin >= 30
-              ? "text-green-600 font-semibold"
-              : "text-[#4a4451]"
-          }
-        >
-          {p.profitMargin}%
-        </span>
+      key: "actions",
+      label: PRODUCT_TABLE.ACTIONS,
+      render: (product: Product) => (
+        <div className="flex gap-2">
+          <Button
+            size="sm"
+            variant="ghost"
+            onClick={() => handleView(product)}
+            className="text-blue-500 hover:text-blue-400 hover:bg-blue-500/10"
+          >
+            <ViewIcon size={16} />
+          </Button>
+          <Button
+            size="sm"
+            variant="ghost"
+            onClick={() => handleEdit(product)}
+            className="text-yellow-500 hover:text-yellow-400 hover:bg-yellow-500/10"
+          >
+            <PencilEdit02Icon size={16} />
+          </Button>
+          <Button
+            size="sm"
+            variant="ghost"
+            onClick={() => handleDeleteClick(product)}
+            className="text-red-500 hover:text-red-400 hover:bg-red-500/10"
+          >
+            <Delete02Icon size={16} />
+          </Button>
+        </div>
       ),
     },
   ];
 
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      className="space-y-4"
-    >
-      <motion.div
-        initial={{ opacity: 0, y: -10 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="flex justify-between items-center"
-      >
-        <div>
-          <h1 className="text-3xl font-bold text-[#2f184b] tracking-tight">
-            {UI_TEXT.PAGES.PRODUCTS.TITLE}
-          </h1>
-          <p className="text-[#4a4451] text-sm mt-1">
-            {UI_TEXT.PAGES.PRODUCTS.SUBTITLE}
-          </p>
-        </div>
-        <Button className="bg-[#532b88] hover:bg-[#9b72cf] text-white rounded-lg text-sm font-semibold flex items-center gap-2">
-          <PlusSignIcon size={16} strokeWidth={2} />
-          {UI_TEXT.PAGES.PRODUCTS.NEW_BUTTON}
-        </Button>
-      </motion.div>
+    <>
+      <DataTable
+        title={PRODUCT_TABLE.TITLE}
+        subtitle={PRODUCT_TABLE.SUBTITLE}
+        columns={columns}
+        data={products}
+        keyExtractor={(product) => product.id}
+        loading={loading}
+        searchPlaceholder={PRODUCT_TABLE.SEARCH_PLACEHOLDER}
+        onSearch={handleSearch}
+        emptyMessage={PRODUCT_TABLE.EMPTY_MESSAGE}
+        actions={
+          <Button onClick={handleCreate} className="gap-2">
+            <Add01Icon size={18} />
+            {PRODUCT_TABLE.NEW_BUTTON}
+          </Button>
+        }
+      />
 
-      <motion.div
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.05 }}
-        className="grid grid-cols-1 md:grid-cols-4 gap-3"
-      >
-        <Card className="border border-[#c8b1e4] rounded-lg">
-          <CardContent className="p-4 flex items-center gap-3">
-            <div className="w-10 h-10 rounded-lg bg-[#3b82f615] flex items-center justify-center">
-              <PackageIcon
-                size={20}
-                style={{ color: "#3b82f6" }}
-                strokeWidth={2}
-              />
-            </div>
-            <div>
-              <p className="text-xs text-[#4a4451] font-semibold uppercase tracking-wider">
-                {UI_TEXT.STATS.TOTAL}
-              </p>
-              <p className="text-2xl font-bold text-[#2f184b]">
-                {totalProducts}
-              </p>
-            </div>
-          </CardContent>
-        </Card>
-        <Card className="border border-[#fde68a] rounded-lg bg-[#fffbeb]">
-          <CardContent className="p-4 flex items-center gap-3">
-            <div className="w-10 h-10 rounded-lg bg-[#f59e0b15] flex items-center justify-center">
-              <AlertCircleIcon
-                size={20}
-                style={{ color: "#f59e0b" }}
-                strokeWidth={2}
-              />
-            </div>
-            <div>
-              <p className="text-xs text-[#92400e] font-semibold uppercase tracking-wider">
-                {UI_TEXT.STATS.LOW_STOCK}
-              </p>
-              <p className="text-2xl font-bold text-[#92400e]">{lowStock}</p>
-            </div>
-          </CardContent>
-        </Card>
-        <Card className="border border-[#fca5a5] rounded-lg bg-[#fef2f2]">
-          <CardContent className="p-4 flex items-center gap-3">
-            <div className="w-10 h-10 rounded-lg bg-[#ef444415] flex items-center justify-center">
-              <AlertCircleIcon
-                size={20}
-                style={{ color: "#ef4444" }}
-                strokeWidth={2}
-              />
-            </div>
-            <div>
-              <p className="text-xs text-[#991b1b] font-semibold uppercase tracking-wider">
-                {UI_TEXT.STATS.OUT_OF_STOCK}
-              </p>
-              <p className="text-2xl font-bold text-[#991b1b]">{outOfStock}</p>
-            </div>
-          </CardContent>
-        </Card>
-        <Card className="border border-[#c8b1e4] rounded-lg bg-[#f4effa]">
-          <CardContent className="p-4 flex items-center gap-3">
-            <div className="w-10 h-10 rounded-lg bg-[#532b8815] flex items-center justify-center">
-              <DollarCircleIcon
-                size={20}
-                style={{ color: "#532b88" }}
-                strokeWidth={2}
-              />
-            </div>
-            <div>
-              <p className="text-xs text-[#4a4451] font-semibold uppercase tracking-wider">
-                {UI_TEXT.STATS.TOTAL_VALUE}
-              </p>
-              <p className="text-2xl font-bold text-[#532b88]">
-                {formatCurrency(totalValue)}
-              </p>
-            </div>
-          </CardContent>
-        </Card>
-      </motion.div>
+      <ProductModal
+        open={modalOpen}
+        onOpenChange={setModalOpen}
+        mode={modalMode}
+        product={selectedProduct}
+        onSubmit={handleSubmit}
+        loading={submitting}
+      />
 
-      <motion.div
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.1 }}
-      >
-        <DataTable
-          title=""
-          subtitle=""
-          columns={columns}
-          data={filteredProducts}
-          keyExtractor={(p) => p.id}
-          searchPlaceholder={UI_TEXT.PAGES.PRODUCTS.SEARCH_PLACEHOLDER}
-          onSearch={setSearchQuery}
-          emptyMessage={UI_TEXT.PAGES.PRODUCTS.EMPTY_MESSAGE}
-        />
-      </motion.div>
-
-      <motion.div
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.15 }}
-        className="flex gap-2"
-      >
-        <Button
-          variant="outline"
-          className="border border-[#c8b1e4] text-[#2f184b] hover:bg-[#f4effa] hover:border-[#532b88] rounded-lg text-sm font-semibold flex items-center gap-2"
-        >
-          <Download01Icon size={16} strokeWidth={2} />
-          {UI_TEXT.PAGES.PRODUCTS.IMPORT_EXCEL}
-        </Button>
-        <Button
-          variant="outline"
-          className="border border-[#c8b1e4] text-[#2f184b] hover:bg-[#f4effa] hover:border-[#532b88] rounded-lg text-sm font-semibold flex items-center gap-2"
-        >
-          <Upload01Icon size={16} strokeWidth={2} />
-          {UI_TEXT.PAGES.PRODUCTS.EXPORT_EXCEL}
-        </Button>
-      </motion.div>
-    </motion.div>
+      <ConfirmModal
+        open={deleteModalOpen}
+        onOpenChange={setDeleteModalOpen}
+        title={PRODUCT_MODAL.DELETE_TITLE}
+        description={PRODUCT_MODAL.DELETE_DESCRIPTION}
+        onConfirm={handleDelete}
+        confirmText={PRODUCT_MODAL.DELETE_CONFIRM}
+        cancelText={PRODUCT_MODAL.DELETE_CANCEL}
+        variant="destructive"
+        loading={submitting}
+      />
+    </>
   );
 }

@@ -14,6 +14,7 @@ export interface Product {
   wholesalePrice: number;
   salePrice: number;
   stock: number;
+  deletedAt: Date | null;
   createdAt: Date;
   updatedAt: Date;
 }

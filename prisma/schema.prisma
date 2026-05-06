@@ -48,6 +48,7 @@ model Product {
   priceHistory      PriceHistory[]
   saleItems         SaleItem[]
   
+  deletedAt         DateTime?
   createdAt         DateTime       @default(now())
   updatedAt         DateTime       @updatedAt
 }
