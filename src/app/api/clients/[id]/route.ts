@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
-import { sellerService } from "@/server/services/seller.service";
+import { clientService } from "@/server/services/client.service";
 import apiErrorHandler, { ApiError } from "@/utils/handlers/apiError.handler";
 import httpStatus from "http-status";
-import { SELLER_MESSAGES } from "@/constants/seller.constant";
+import { CLIENT_MESSAGES } from "@/constants/client.constant";
 
 interface RouteParams {
   params: Promise<{ id: string }>;
@@ -11,9 +11,9 @@ interface RouteParams {
 export async function GET(request: NextRequest, { params }: RouteParams) {
   try {
     const { id } = await params;
-    const seller = await sellerService.findById(id);
+    const client = await clientService.findById(id);
 
-    return NextResponse.json(seller, { status: httpStatus.OK });
+    return NextResponse.json(client, { status: httpStatus.OK });
   } catch (error) {
     return apiErrorHandler({
       error: error as ApiError,
@@ -27,10 +27,10 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
     const { id } = await params;
     const body = await request.json();
 
-    const seller = await sellerService.update(id, body);
+    const client = await clientService.update(id, body);
 
     return NextResponse.json(
-      { data: seller, message: SELLER_MESSAGES.UPDATE_SUCCESS },
+      { data: client, message: CLIENT_MESSAGES.UPDATE_SUCCESS },
       { status: httpStatus.OK },
     );
   } catch (error) {
@@ -45,10 +45,10 @@ export async function DELETE(request: NextRequest, { params }: RouteParams) {
   try {
     const { id } = await params;
 
-    await sellerService.delete(id);
+    await clientService.delete(id);
 
     return NextResponse.json(
-      { message: SELLER_MESSAGES.DELETE_SUCCESS },
+      { message: CLIENT_MESSAGES.DELETE_SUCCESS },
       { status: httpStatus.OK },
     );
   } catch (error) {

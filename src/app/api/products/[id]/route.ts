@@ -31,7 +31,7 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
 
     return NextResponse.json(
       { data: product, message: PRODUCT_MESSAGES.UPDATE_SUCCESS },
-      { status: httpStatus.OK }
+      { status: httpStatus.OK },
     );
   } catch (error) {
     return apiErrorHandler({
@@ -49,7 +49,7 @@ export async function DELETE(request: NextRequest, { params }: RouteParams) {
 
     return NextResponse.json(
       { message: PRODUCT_MESSAGES.DELETE_SUCCESS },
-      { status: httpStatus.OK }
+      { status: httpStatus.OK },
     );
   } catch (error) {
     return apiErrorHandler({

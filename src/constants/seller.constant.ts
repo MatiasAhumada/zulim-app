@@ -41,7 +41,8 @@ export const SELLER_MODAL = {
   EDIT_TITLE: "Editar Vendedor",
   VIEW_TITLE: "Ver Vendedor",
   DELETE_TITLE: "Eliminar Vendedor",
-  DELETE_DESCRIPTION: "¿Estás seguro de que deseas eliminar este vendedor? Esta acción no se puede deshacer.",
+  DELETE_DESCRIPTION:
+    "¿Estás seguro de que deseas eliminar este vendedor? Esta acción no se puede deshacer.",
   DELETE_CONFIRM: "Eliminar",
   DELETE_CANCEL: "Cancelar",
   SAVE_BUTTON: "Guardar",

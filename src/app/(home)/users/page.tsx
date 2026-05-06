@@ -7,16 +7,31 @@ import { ConfirmModal } from "@/components/common/GenericModal";
 import { Button } from "@/components/ui/button";
 import { Seller, CreateSellerDto } from "@/types/seller.types";
 import { sellerService } from "@/services/seller.service";
-import { SELLER_TABLE, SELLER_MODAL, SELLER_MESSAGES, ROLE_LABELS } from "@/constants/seller.constant";
-import { clientSuccessHandler, clientErrorHandler } from "@/utils/handlers/clientError.handler";
-import { Add01Icon, View01Icon, PencilEdit02Icon, Delete02Icon } from "hugeicons-react";
+import {
+  SELLER_TABLE,
+  SELLER_MODAL,
+  SELLER_MESSAGES,
+  ROLE_LABELS,
+} from "@/constants/seller.constant";
+import {
+  clientSuccessHandler,
+  clientErrorHandler,
+} from "@/utils/handlers/clientError.handler";
+import {
+  Add01Icon,
+  View01Icon,
+  PencilEdit02Icon,
+  Delete02Icon,
+} from "hugeicons-react";
 
 export default function SellersPage() {
   const [sellers, setSellers] = useState<Seller[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [modalOpen, setModalOpen] = useState(false);
-  const [modalMode, setModalMode] = useState<"create" | "edit" | "view">("create");
+  const [modalMode, setModalMode] = useState<"create" | "edit" | "view">(
+    "create",
+  );
   const [selectedSeller, setSelectedSeller] = useState<Seller | undefined>();
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [sellerToDelete, setSellerToDelete] = useState<Seller | null>(null);
@@ -74,7 +89,9 @@ export default function SellersPage() {
         await sellerService.create(data);
         clientSuccessHandler(SELLER_MESSAGES.CREATE_SUCCESS);
       } else if (modalMode === "edit" && selectedSeller) {
-        const updateData = data.password ? data : { name: data.name, email: data.email };
+        const updateData = data.password
+          ? data
+          : { name: data.name, email: data.email };
         await sellerService.update(selectedSeller.id, updateData);
         clientSuccessHandler(SELLER_MESSAGES.UPDATE_SUCCESS);
       }

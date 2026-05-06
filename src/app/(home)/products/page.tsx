@@ -7,9 +7,22 @@ import { ConfirmModal } from "@/components/common/GenericModal";
 import { Button } from "@/components/ui/button";
 import { Product, CreateProductDto } from "@/types/product.types";
 import { productService } from "@/services/product.service";
-import { PRODUCT_TABLE, PRODUCT_MODAL, PRODUCT_MESSAGES, UNIT_TYPE_LABELS } from "@/constants/product.constant";
-import { clientSuccessHandler, clientErrorHandler } from "@/utils/handlers/clientError.handler";
-import { Add01Icon, ViewIcon, PencilEdit02Icon, Delete02Icon } from "hugeicons-react";
+import {
+  PRODUCT_TABLE,
+  PRODUCT_MODAL,
+  PRODUCT_MESSAGES,
+  UNIT_TYPE_LABELS,
+} from "@/constants/product.constant";
+import {
+  clientSuccessHandler,
+  clientErrorHandler,
+} from "@/utils/handlers/clientError.handler";
+import {
+  Add01Icon,
+  ViewIcon,
+  PencilEdit02Icon,
+  Delete02Icon,
+} from "hugeicons-react";
 import { formatCurrency } from "@/utils/currency.util";
 
 export default function ProductsPage() {
@@ -17,7 +30,9 @@ export default function ProductsPage() {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [modalOpen, setModalOpen] = useState(false);
-  const [modalMode, setModalMode] = useState<"create" | "edit" | "view">("create");
+  const [modalMode, setModalMode] = useState<"create" | "edit" | "view">(
+    "create",
+  );
   const [selectedProduct, setSelectedProduct] = useState<Product | undefined>();
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [productToDelete, setProductToDelete] = useState<Product | null>(null);
@@ -123,14 +138,18 @@ export default function ProductsPage() {
       key: "unitType",
       label: "Unidad",
       render: (product: Product) => (
-        <span className="text-neutral-400">{UNIT_TYPE_LABELS[product.unitType]}</span>
+        <span className="text-neutral-400">
+          {UNIT_TYPE_LABELS[product.unitType]}
+        </span>
       ),
     },
     {
       key: "stock",
       label: "Stock",
       render: (product: Product) => (
-        <span className={product.stock <= 10 ? "text-red-500 font-semibold" : ""}>
+        <span
+          className={product.stock <= 10 ? "text-red-500 font-semibold" : ""}
+        >
           {product.stock}
         </span>
       ),

@@ -110,7 +110,11 @@ model Client {
   taxCondition      String   // Responsable Inscripto, Monotributo, Consumidor Final
   address           String?
   email             String?
+  phone             String?
   sales             Sale[]
+  deletedAt         DateTime?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
 }
 
 enum UnitType {

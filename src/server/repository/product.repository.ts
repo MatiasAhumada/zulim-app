@@ -35,7 +35,10 @@ export const productRepository = {
     });
   },
 
-  async findMany({ search, includeDeleted = false }: FindManyParams = {}): Promise<Product[]> {
+  async findMany({
+    search,
+    includeDeleted = false,
+  }: FindManyParams = {}): Promise<Product[]> {
     return prisma.product.findMany({
       where: {
         deletedAt: includeDeleted ? undefined : null,

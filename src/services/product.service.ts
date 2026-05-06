@@ -1,6 +1,10 @@
 import clientAxios from "@/utils/clientAxios.util";
 import { API_ROUTES } from "@/constants/routes";
-import { Product, CreateProductDto, UpdateProductDto } from "@/types/product.types";
+import {
+  Product,
+  CreateProductDto,
+  UpdateProductDto,
+} from "@/types/product.types";
 
 export const productService = {
   async create(dto: CreateProductDto): Promise<Product> {

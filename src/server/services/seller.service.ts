@@ -44,7 +44,9 @@ export const sellerService = {
   },
 
   async create(dto: CreateSellerDto): Promise<User> {
-    const existingSeller = await userRepository.findByEmail({ email: dto.email });
+    const existingSeller = await userRepository.findByEmail({
+      email: dto.email,
+    });
 
     if (existingSeller) {
       const error = new Error(SELLER_MESSAGES.EMAIL_DUPLICATE) as Error & {
@@ -96,7 +98,9 @@ export const sellerService = {
     }
 
     if (dto.email) {
-      const existingSeller = await userRepository.findByEmail({ email: dto.email });
+      const existingSeller = await userRepository.findByEmail({
+        email: dto.email,
+      });
       if (existingSeller && existingSeller.id !== id) {
         const error = new Error(SELLER_MESSAGES.EMAIL_DUPLICATE) as Error & {
           statusCode: number;

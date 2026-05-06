@@ -1,6 +1,11 @@
 import clientAxios from "@/utils/clientAxios.util";
 import { API_ROUTES } from "@/constants/routes";
-import { Seller, SellerWithStats, CreateSellerDto, UpdateSellerDto } from "@/types/seller.types";
+import {
+  Seller,
+  SellerWithStats,
+  CreateSellerDto,
+  UpdateSellerDto,
+} from "@/types/seller.types";
 
 export const sellerService = {
   async create(dto: CreateSellerDto): Promise<Seller> {

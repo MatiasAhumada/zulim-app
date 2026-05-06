@@ -31,7 +31,11 @@ export const userRepository = {
     });
   },
 
-  async findMany({ search, role, includeDeleted = false }: FindManyParams = {}): Promise<User[]> {
+  async findMany({
+    search,
+    role,
+    includeDeleted = false,
+  }: FindManyParams = {}): Promise<User[]> {
     return prisma.user.findMany({
       where: {
         deletedAt: includeDeleted ? undefined : null,

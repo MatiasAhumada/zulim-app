@@ -6,7 +6,11 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Seller, CreateSellerDto } from "@/types/seller.types";
-import { SELLER_FORM_LABELS, SELLER_PLACEHOLDERS, SELLER_MODAL } from "@/constants/seller.constant";
+import {
+  SELLER_FORM_LABELS,
+  SELLER_PLACEHOLDERS,
+  SELLER_MODAL,
+} from "@/constants/seller.constant";
 
 interface SellerModalProps {
   open: boolean;
@@ -60,7 +64,11 @@ export function SellerModal({
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
-  const title = isCreate ? SELLER_MODAL.CREATE_TITLE : isEdit ? SELLER_MODAL.EDIT_TITLE : SELLER_MODAL.VIEW_TITLE;
+  const title = isCreate
+    ? SELLER_MODAL.CREATE_TITLE
+    : isEdit
+      ? SELLER_MODAL.EDIT_TITLE
+      : SELLER_MODAL.VIEW_TITLE;
 
   return (
     <GenericModal
@@ -71,7 +79,11 @@ export function SellerModal({
       footer={
         !isView && (
           <>
-            <Button variant="outline" onClick={() => onOpenChange(false)} disabled={loading}>
+            <Button
+              variant="outline"
+              onClick={() => onOpenChange(false)}
+              disabled={loading}
+            >
               {SELLER_MODAL.CANCEL_BUTTON}
             </Button>
             <Button onClick={handleSubmit} disabled={loading}>
@@ -111,7 +123,11 @@ export function SellerModal({
           <div className="space-y-2">
             <Label htmlFor="password">
               {SELLER_FORM_LABELS.PASSWORD}
-              {isEdit && <span className="text-neutral-400 text-xs ml-2">(Dejar vacío para mantener)</span>}
+              {isEdit && (
+                <span className="text-neutral-400 text-xs ml-2">
+                  (Dejar vacío para mantener)
+                </span>
+              )}
             </Label>
             <Input
               id="password"
