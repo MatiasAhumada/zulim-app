@@ -14,6 +14,7 @@ export const ROUTES = {
   CLIENT_DETAIL: (id: string) => `/clients/${id}`,
   REPORTS: "/reports",
   USERS: "/users",
+  SELLERS: "/users",
   USER_DETAIL: (id: string) => `/users/${id}`,
   SETTINGS: "/settings",
 } as const;
@@ -27,7 +28,7 @@ export const ROUTE_LABELS: Record<string, string> = {
   "/sales": "Ventas",
   "/clients": "Clientes",
   "/reports": "Reportes",
-  "/users": "Usuarios",
+  "/users": "Vendedores",
   "/settings": "Configuración",
 } as const;
 
@@ -39,6 +40,8 @@ export const API_ROUTES = {
   },
   PRODUCTS: "/api/products",
   PRODUCT: (id: string) => `/api/products/${id}`,
+  SELLERS: "/api/sellers",
+  SELLER: (id: string) => `/api/sellers/${id}`,
   INVENTORY: "/api/inventory",
   SALES: "/api/sales",
   SALE: (id: string) => `/api/sales/${id}`,

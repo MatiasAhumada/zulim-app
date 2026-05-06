@@ -1,112 +1,216 @@
 "use client";
 
-import { useState } from "react";
-import { motion } from "framer-motion";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { useState, useEffect } from "react";
 import { DataTable } from "@/components/common/DataTable";
-import { UI_TEXT } from "@/constants/ui-text.constant";
+import { SellerModal } from "@/components/sellers/SellerModal";
+import { ConfirmModal } from "@/components/common/GenericModal";
+import { Button } from "@/components/ui/button";
+import { Seller, CreateSellerDto } from "@/types/seller.types";
+import { sellerService } from "@/services/seller.service";
+import { SELLER_TABLE, SELLER_MODAL, SELLER_MESSAGES, ROLE_LABELS } from "@/constants/seller.constant";
+import { clientSuccessHandler, clientErrorHandler } from "@/utils/handlers/clientError.handler";
+import { Add01Icon, View01Icon, PencilEdit02Icon, Delete02Icon } from "hugeicons-react";
 
-interface User {
-  id: string;
-  name: string;
-  email: string;
-  role: "admin" | "seller";
-  createdAt: Date;
-}
+export default function SellersPage() {
+  const [sellers, setSellers] = useState<Seller[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [modalOpen, setModalOpen] = useState(false);
+  const [modalMode, setModalMode] = useState<"create" | "edit" | "view">("create");
+  const [selectedSeller, setSelectedSeller] = useState<Seller | undefined>();
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [sellerToDelete, setSellerToDelete] = useState<Seller | null>(null);
+  const [submitting, setSubmitting] = useState(false);
 
-const mockUsers: User[] = [
-  {
-    id: "1",
-    name: "Admin Principal",
-    email: "admin@zulim.com",
-    role: "admin",
-    createdAt: new Date(),
-  },
-  {
-    id: "2",
-    name: "Juan Vendedor",
-    email: "juan@zulim.com",
-    role: "seller",
-    createdAt: new Date(),
-  },
-  {
-    id: "3",
-    name: "María Vendedora",
-    email: "maria@zulim.com",
-    role: "seller",
-    createdAt: new Date(),
-  },
-];
+  const loadSellers = async (search?: string) => {
+    try {
+      setLoading(true);
+      const data = await sellerService.findAll(search);
+      setSellers(data);
+    } catch (error) {
+      clientErrorHandler(error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-export default function UsersPage() {
-  const [searchQuery, setSearchQuery] = useState("");
+  useEffect(() => {
+    loadSellers();
+  }, []);
 
-  const filteredUsers = mockUsers.filter(
-    (u) =>
-      u.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      u.email.includes(searchQuery),
-  );
+  const handleSearch = (value: string) => {
+    setSearchTerm(value);
+    loadSellers(value);
+  };
+
+  const handleCreate = () => {
+    setModalMode("create");
+    setSelectedSeller(undefined);
+    setModalOpen(true);
+  };
+
+  const handleView = (seller: Seller) => {
+    setModalMode("view");
+    setSelectedSeller(seller);
+    setModalOpen(true);
+  };
+
+  const handleEdit = (seller: Seller) => {
+    setModalMode("edit");
+    setSelectedSeller(seller);
+    setModalOpen(true);
+  };
+
+  const handleDeleteClick = (seller: Seller) => {
+    setSellerToDelete(seller);
+    setDeleteModalOpen(true);
+  };
+
+  const handleSubmit = async (data: CreateSellerDto) => {
+    try {
+      setSubmitting(true);
+
+      if (modalMode === "create") {
+        await sellerService.create(data);
+        clientSuccessHandler(SELLER_MESSAGES.CREATE_SUCCESS);
+      } else if (modalMode === "edit" && selectedSeller) {
+        const updateData = data.password ? data : { name: data.name, email: data.email };
+        await sellerService.update(selectedSeller.id, updateData);
+        clientSuccessHandler(SELLER_MESSAGES.UPDATE_SUCCESS);
+      }
+
+      setModalOpen(false);
+      loadSellers(searchTerm);
+    } catch (error) {
+      clientErrorHandler(error);
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const handleDelete = async () => {
+    if (!sellerToDelete) return;
+
+    try {
+      setSubmitting(true);
+      await sellerService.delete(sellerToDelete.id);
+      clientSuccessHandler(SELLER_MESSAGES.DELETE_SUCCESS);
+      setDeleteModalOpen(false);
+      loadSellers(searchTerm);
+    } catch (error) {
+      clientErrorHandler(error);
+    } finally {
+      setSubmitting(false);
+    }
+  };
 
   const columns = [
-    { key: "name", label: UI_TEXT.TABLE.COLUMNS.NAME },
-    { key: "email", label: UI_TEXT.TABLE.COLUMNS.EMAIL },
+    {
+      key: "name",
+      label: "Nombre",
+      render: (seller: Seller) => (
+        <span className="font-semibold">{seller.name}</span>
+      ),
+    },
+    {
+      key: "email",
+      label: "Email",
+      render: (seller: Seller) => (
+        <span className="text-neutral-400">{seller.email}</span>
+      ),
+    },
     {
       key: "role",
-      label: UI_TEXT.TABLE.COLUMNS.ROLE,
-      render: (u: User) => (
-        <span
-          className={`px-2 py-1 rounded text-xs font-medium ${u.role === "admin" ? "bg-[#532b88] text-white" : "bg-[#f4effa] text-[#532b88]"}`}
-        >
-          {u.role === "admin" ? UI_TEXT.ROLES.ADMIN : UI_TEXT.ROLES.SELLER}
+      label: "Rol",
+      render: (seller: Seller) => (
+        <span className="px-2 py-1 bg-purple-500/10 text-purple-500 rounded text-xs font-semibold">
+          {ROLE_LABELS[seller.role]}
         </span>
       ),
     },
     {
       key: "createdAt",
-      label: UI_TEXT.TABLE.COLUMNS.CREATED,
-      render: (u: User) => u.createdAt.toLocaleDateString("es-AR"),
+      label: "Fecha de Registro",
+      render: (seller: Seller) => (
+        <span className="text-neutral-400 text-sm">
+          {new Date(seller.createdAt).toLocaleDateString("es-AR")}
+        </span>
+      ),
+    },
+    {
+      key: "actions",
+      label: SELLER_TABLE.ACTIONS,
+      render: (seller: Seller) => (
+        <div className="flex gap-2">
+          <Button
+            size="sm"
+            variant="ghost"
+            onClick={() => handleView(seller)}
+            className="text-blue-500 hover:text-blue-400 hover:bg-blue-500/10"
+          >
+            <View01Icon size={16} />
+          </Button>
+          <Button
+            size="sm"
+            variant="ghost"
+            onClick={() => handleEdit(seller)}
+            className="text-yellow-500 hover:text-yellow-400 hover:bg-yellow-500/10"
+          >
+            <PencilEdit02Icon size={16} />
+          </Button>
+          <Button
+            size="sm"
+            variant="ghost"
+            onClick={() => handleDeleteClick(seller)}
+            className="text-red-500 hover:text-red-400 hover:bg-red-500/10"
+          >
+            <Delete02Icon size={16} />
+          </Button>
+        </div>
+      ),
     },
   ];
 
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      className="space-y-6"
-    >
-      <motion.div
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="flex justify-between items-center"
-      >
-        <div>
-          <h1 className="text-4xl font-bold text-[#2f184b]">
-            {UI_TEXT.PAGES.USERS.TITLE}
-          </h1>
-          <p className="text-[#4a4451] mt-2">{UI_TEXT.PAGES.USERS.SUBTITLE}</p>
-        </div>
-        <Button className="bg-gradient-to-r from-[#532b88] to-[#724aa4] hover:from-[#3c0e71] hover:to-[#532b88] text-white shadow-lg shadow-purple-500/30 transition-all hover:scale-[1.02]">
-          + {UI_TEXT.PAGES.USERS.NEW_BUTTON}
-        </Button>
-      </motion.div>
+    <>
+      <DataTable
+        title={SELLER_TABLE.TITLE}
+        subtitle={SELLER_TABLE.SUBTITLE}
+        columns={columns}
+        data={sellers}
+        keyExtractor={(seller) => seller.id}
+        loading={loading}
+        searchPlaceholder={SELLER_TABLE.SEARCH_PLACEHOLDER}
+        onSearch={handleSearch}
+        emptyMessage={SELLER_TABLE.EMPTY_MESSAGE}
+        actions={
+          <Button onClick={handleCreate} className="gap-2">
+            <Add01Icon size={18} />
+            {SELLER_TABLE.NEW_BUTTON}
+          </Button>
+        }
+      />
 
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.1 }}
-      >
-        <DataTable
-          title=""
-          subtitle=""
-          columns={columns}
-          data={filteredUsers}
-          keyExtractor={(u) => u.id}
-          searchPlaceholder={UI_TEXT.PAGES.USERS.SEARCH_PLACEHOLDER}
-          onSearch={setSearchQuery}
-          emptyMessage={UI_TEXT.PAGES.USERS.EMPTY_MESSAGE}
-        />
-      </motion.div>
-    </motion.div>
+      <SellerModal
+        open={modalOpen}
+        onOpenChange={setModalOpen}
+        mode={modalMode}
+        seller={selectedSeller}
+        onSubmit={handleSubmit}
+        loading={submitting}
+      />
+
+      <ConfirmModal
+        open={deleteModalOpen}
+        onOpenChange={setDeleteModalOpen}
+        title={SELLER_MODAL.DELETE_TITLE}
+        description={SELLER_MODAL.DELETE_DESCRIPTION}
+        onConfirm={handleDelete}
+        confirmText={SELLER_MODAL.DELETE_CONFIRM}
+        cancelText={SELLER_MODAL.DELETE_CANCEL}
+        variant="destructive"
+        loading={submitting}
+      />
+    </>
   );
 }

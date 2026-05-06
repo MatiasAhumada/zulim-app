@@ -19,6 +19,8 @@ model User {
   password  String
   name      String
   role      Role     @default(SELLER)
+  sales     Sale[]
+  deletedAt DateTime?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -80,6 +82,8 @@ model Sale {
   cae               String?     // Código de Autorización Electrónico de AFIP
   caeExpiration     DateTime?
   
+  sellerId          String?
+  seller            User?       @relation(fields: [sellerId], references: [id])
   clientId          String?
   client            Client?     @relation(fields: [clientId], references: [id])
   items             SaleItem[]

@@ -12,6 +12,12 @@ interface FindByEmailParams {
   email: string;
 }
 
+interface FindManyParams {
+  search?: string;
+  role?: Role;
+  includeDeleted?: boolean;
+}
+
 export const userRepository = {
   async findById(id: string): Promise<User | null> {
     return prisma.user.findUnique({
@@ -22,6 +28,22 @@ export const userRepository = {
   async findByEmail({ email }: FindByEmailParams): Promise<User | null> {
     return prisma.user.findUnique({
       where: { email },
+    });
+  },
+
+  async findMany({ search, role, includeDeleted = false }: FindManyParams = {}): Promise<User[]> {
+    return prisma.user.findMany({
+      where: {
+        deletedAt: includeDeleted ? undefined : null,
+        ...(role && { role }),
+        ...(search && {
+          OR: [
+            { name: { contains: search, mode: "insensitive" } },
+            { email: { contains: search, mode: "insensitive" } },
+          ],
+        }),
+      },
+      orderBy: { createdAt: "desc" },
     });
   },
 
@@ -44,13 +66,16 @@ export const userRepository = {
   },
 
   async delete(id: string): Promise<void> {
-    await prisma.user.delete({
+    await prisma.user.update({
       where: { id },
+      data: { deletedAt: new Date() },
     });
   },
 
-  async findMany(): Promise<User[]> {
-    return prisma.user.findMany();
+  async countSalesBySeller(sellerId: string): Promise<number> {
+    return prisma.sale.count({
+      where: { sellerId },
+    });
   },
 };
 
