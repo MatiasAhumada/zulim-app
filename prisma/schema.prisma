@@ -71,24 +71,38 @@ model PriceHistory {
 }
 
 // 3. Ventas y Facturación
+enum PaymentMethod {
+  EFECTIVO
+  TRANSFERENCIA
+  DEBITO
+  CREDITO
+  MERCADOPAGO
+}
+
+enum InvoiceType {
+  A
+  B
+  C
+  TICKET
+}
+
 model Sale {
-  id                String      @id @default(uuid())
-  totalAmount       Decimal     @db.Decimal(10, 2)
-  roundedAmount     Decimal     @db.Decimal(10, 2) // Valor final a la centena
-  paymentMethod     String      // Efectivo, Transferencia, etc.
-  
-  // Integración AFIP
-  invoiceType       String?     // A, B, C o Ticket
-  cae               String?     // Código de Autorización Electrónico de AFIP
-  caeExpiration     DateTime?
+  id                String         @id @default(uuid())
+  saleNumber        Int            @default(autoincrement())
+  totalAmount       Decimal        @db.Decimal(10, 2)
+  roundedAmount     Decimal        @db.Decimal(10, 2)
+  paymentMethod     PaymentMethod
   
   sellerId          String?
-  seller            User?       @relation(fields: [sellerId], references: [id])
+  seller            User?          @relation(fields: [sellerId], references: [id])
   clientId          String?
-  client            Client?     @relation(fields: [clientId], references: [id])
+  client            Client?        @relation(fields: [clientId], references: [id])
   items             SaleItem[]
+  invoice           Invoice?
   
-  createdAt         DateTime    @default(now())
+  deletedAt         DateTime?
+  createdAt         DateTime       @default(now())
+  updatedAt         DateTime       @updatedAt
 }
 
 model SaleItem {
@@ -99,7 +113,24 @@ model SaleItem {
   product           Product  @relation(fields: [productId], references: [id])
   
   quantity          Float
-  priceAtSale       Decimal  @db.Decimal(10, 2)
+  unitPrice         Decimal  @db.Decimal(10, 2)
+  subtotal          Decimal  @db.Decimal(10, 2)
+  unitType          UnitType
+}
+
+// 5. Comprobantes AFIP
+model Invoice {
+  id                String       @id @default(uuid())
+  saleId            String       @unique
+  sale              Sale         @relation(fields: [saleId], references: [id])
+  
+  invoiceType       InvoiceType
+  invoiceNumber     String
+  cae               String?
+  caeExpiration     DateTime?
+  
+  createdAt         DateTime     @default(now())
+  updatedAt         DateTime     @updatedAt
 }
 
 // 4. Clientes (Adaptado para AFIP)
