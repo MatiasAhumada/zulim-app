@@ -1,6 +1,11 @@
 import { UnitType } from "@prisma/client";
 
-export type PaymentMethod = "EFECTIVO" | "TRANSFERENCIA" | "DEBITO" | "CREDITO" | "MERCADOPAGO";
+export type PaymentMethod =
+  | "EFECTIVO"
+  | "TRANSFERENCIA"
+  | "DEBITO"
+  | "CREDITO"
+  | "MERCADOPAGO";
 export type InvoiceType = "A" | "B" | "C" | "TICKET";
 
 export interface SaleItem {

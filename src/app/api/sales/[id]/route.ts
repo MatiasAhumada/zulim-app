@@ -30,7 +30,7 @@ export async function DELETE(request: NextRequest, { params }: RouteParams) {
 
     return NextResponse.json(
       { message: SALE_MESSAGES.DELETE_SUCCESS },
-      { status: httpStatus.OK }
+      { status: httpStatus.OK },
     );
   } catch (error) {
     return apiErrorHandler({

@@ -81,7 +81,7 @@ export const saleService = {
 
     const totalAmount = dto.items.reduce(
       (sum, item) => sum + item.quantity * item.unitPrice,
-      0
+      0,
     );
     const roundedAmount = roundToHundred(totalAmount);
 
@@ -101,7 +101,7 @@ export const saleService = {
             subtotal: item.quantity * item.unitPrice,
             unitType: product!.unitType,
           };
-        })
+        }),
       ),
       ...(dto.generateInvoice &&
         dto.invoiceType && {

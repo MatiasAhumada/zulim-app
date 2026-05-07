@@ -1,5 +1,11 @@
 import { prisma } from "@/lib/prisma";
-import { Sale, SaleItem, Invoice, PaymentMethod, InvoiceType } from "@prisma/client";
+import {
+  Sale,
+  SaleItem,
+  Invoice,
+  PaymentMethod,
+  InvoiceType,
+} from "@prisma/client";
 
 interface CreateSaleDto {
   clientId?: string;

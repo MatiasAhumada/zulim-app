@@ -28,7 +28,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json(
       { data: sale, message: SALE_MESSAGES.CREATE_SUCCESS },
-      { status: httpStatus.CREATED }
+      { status: httpStatus.CREATED },
     );
   } catch (error) {
     return apiErrorHandler({

@@ -34,9 +34,9 @@ export const ROUTE_LABELS: Record<string, string> = {
 
 export const API_ROUTES = {
   AUTH: {
-    SESSION: "/api/session",
-    LOGIN: "/api/auth/login",
-    LOGOUT: "/api/auth/logout",
+    SESSION: "/api/auth/session",
+    LOGIN: "/api/auth",
+    LOGOUT: "/api/auth",
   },
   PRODUCTS: "/api/products",
   PRODUCT: (id: string) => `/api/products/${id}`,
