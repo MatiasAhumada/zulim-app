@@ -19,7 +19,7 @@ import {
 } from "@/utils/handlers/clientError.handler";
 import {
   Add01Icon,
-  View01Icon,
+  ViewIcon,
   PencilEdit02Icon,
   Delete02Icon,
 } from "hugeicons-react";
@@ -165,7 +165,7 @@ export default function SellersPage() {
             onClick={() => handleView(seller)}
             className="text-blue-500 hover:text-blue-400 hover:bg-blue-500/10"
           >
-            <View01Icon size={16} />
+            <ViewIcon size={16} />
           </Button>
           <Button
             size="sm"
