@@ -1,89 +1,82 @@
-# Generic Next
+# ZULIM Sistema ERP
 
-> Plantilla profesional Next.js para acelerar el desarrollo de aplicaciones full-stack
+> Sistema de gestión empresarial completo para control de ventas, inventario y administración
 
-Una base sólida y reutilizable para proyectos Next.js, diseñada con los más altos estándares de la industria. Integra las mejores prácticas, patrones arquitectónicos escalables y componentes listos para producción.
+Sistema ERP moderno desarrollado con Next.js 16, diseñado para optimizar la gestión de negocios con punto de venta integrado, control de inventario, gestión de clientes y reportes en tiempo real.
 
 ## 🚀 Stack Tecnológico
 
-| Categoría | Tecnologías |
-|-----------|-------------|
-| **Framework** | Next.js 16 (App Router) |
-| **Lenguaje** | TypeScript 5 |
-| **Base de Datos** | PostgreSQL + Prisma 7 |
-| **Estilos** | Tailwind CSS 4 |
-| **Componentes** | shadcn/ui + Radix UI |
-| **Iconos** | Hugeicons React |
-| **Animaciones** | Framer Motion |
-| **HTTP Client** | Axios |
-| **Validación** | Zod |
-| **Notificaciones** | Sonner |
-| **Package Manager** | pnpm |
+| Categoría           | Tecnologías             |
+| ------------------- | ----------------------- |
+| **Framework**       | Next.js 16 (App Router) |
+| **Lenguaje**        | TypeScript 5            |
+| **Base de Datos**   | PostgreSQL + Prisma 7   |
+| **Estilos**         | Tailwind CSS 4          |
+| **Componentes**     | shadcn/ui + Radix UI    |
+| **Iconos**          | Hugeicons React         |
+| **Animaciones**     | Framer Motion           |
+| **HTTP Client**     | Axios                   |
+| **Validación**      | Zod                     |
+| **Notificaciones**  | Sonner                  |
+| **Package Manager** | pnpm                    |
 
 ## ✨ Características Principales
+
+### 📊 Módulos del Sistema
+
+- **Dashboard** - Panel de control con métricas y estadísticas en tiempo real
+- **Punto de Venta (POS)** - Sistema de ventas rápido e intuitivo
+- **Productos** - Gestión completa de inventario y catálogo
+- **Ventas** - Historial y seguimiento de transacciones
+- **Clientes** - Base de datos de clientes y historial de compras
+- **Reportes** - Análisis y reportes detallados del negocio
+- **Usuarios** - Administración de usuarios y roles (Admin/Vendedor)
 
 ### 🏗️ Arquitectura Escalable
 
 ```
 src/
-├── components/          # Componentes React
-│   ├── common/         # Componentes genéricos reutilizables
-│   └── ui/             # Componentes de UI (shadcn)
+├── app/                 # Rutas y páginas (App Router)
+│   ├── (home)/         # Rutas protegidas del sistema
+│   ├── api/            # API Routes
+│   └── login/          # Autenticación
+├── components/
+│   ├── common/         # Componentes reutilizables
+│   ├── layout/         # Sidebar y estructura
+│   ├── pos/            # Componentes del punto de venta
+│   └── ui/             # Componentes base (shadcn)
 ├── constants/          # Constantes y configuraciones
-├── lib/                # Utilidades y configuración de librerías
-├── server/             # Backend (dentro de Next.js)
+├── lib/                # Utilidades y hooks
+├── server/             # Lógica backend
 │   ├── repository/     # Acceso a datos
 │   └── services/       # Lógica de negocio
-├── services/           # Servicios frontend (API client)
-└── utils/              # Utilidades y helpers
-    └── handlers/       # Manejadores de errores
+├── services/           # Servicios frontend
+├── types/              # Definiciones TypeScript
+└── utils/              # Utilidades y handlers
 ```
 
-### 🎯 Componentes Genéricos
+### 🎨 Interfaz de Usuario
 
-**DataTable** - Tabla de datos con:
-- Búsqueda integrada
-- Animaciones con Framer Motion
-- Contenido expandible
-- Loading states
-- Total de registros
+- **Sidebar Colapsable** - Navegación intuitiva con animaciones fluidas
+- **Tema Personalizado** - Paleta de colores púrpura profesional
+- **Responsive Design** - Adaptable a cualquier dispositivo
+- **Animaciones Suaves** - Transiciones con Framer Motion
+- **Componentes Reutilizables** - DataTable, Modales genéricos
 
-**GenericModal** - Modal reutilizable con:
-- Múltiples tamaños (sm, md, lg, xl, 2xl, 4xl)
-- Variantes de tema (default, dark)
-- Animaciones de entrada/salida
-- ConfirmModal incluido para diálogos de confirmación
+### 🔐 Seguridad y Autenticación
 
-### 🔐 Manejo de Errores
-
-**Backend (`apiError.handler`)**
-```typescript
-throw new ApiError({
-  status: httpStatus.NOT_FOUND,
-  message: "Usuario no encontrado",
-});
-```
-
-**Frontend (`clientError.handler`)**
-```typescript
-clientErrorHandler(error, callback, {
-  showToast: true,
-  messagePrefix: "Error al guardar: ",
-});
-```
-
-### 📦 Patrones Implementados
-
-- **Repository Pattern** - Abstracción del acceso a datos
-- **Service Layer** - Lógica de negocio separada
-- **API Client** - Axios con interceptores centralizados
-- **Constantes Centralizadas** - Sin valores hardcodeados
+- Sistema de autenticación con roles (Admin/Vendedor)
+- Rutas protegidas con middleware
+- Gestión de sesiones segura
+- Validación de datos con Zod
 
 ## 🛠️ Comandos Disponibles
 
 ```bash
 # Desarrollo
-pnpm dev              # Inicia servidor en puerto 3000
+pnpm dev              # Inicia servidor en puerto 3013
+pnpm build            # Build de producción
+pnpm start            # Inicia servidor de producción
 
 # Base de datos
 pnpm migrate          # Crea y aplica migración
@@ -94,23 +87,15 @@ pnpm studio           # Abre Prisma Studio
 # Código
 pnpm format           # Formatea con Prettier
 pnpm lint             # Ejecuta ESLint
-pnpm build            # Build de producción
 ```
 
-## 📋 Primeros Pasos
+## 📋 Instalación y Configuración
 
-### 1. Configurar Variables de Entorno
+### 1. Clonar el Repositorio
 
 ```bash
-copy .env.example .env
-```
-
-Edita `.env` con tus credenciales:
-
-```env
-DATABASE_URL="postgresql://user:password@localhost:5432/generic-next"
-NODE_ENV="development"
-NEXT_PUBLIC_API_URL=""
+git clone <repository-url>
+cd zulim-app
 ```
 
 ### 2. Instalar Dependencias
@@ -119,165 +104,96 @@ NEXT_PUBLIC_API_URL=""
 pnpm install
 ```
 
-### 3. Configurar Base de Datos
+### 3. Configurar Variables de Entorno
+
+```bash
+copy .env.example .env
+```
+
+Edita `.env` con tus credenciales:
+
+```env
+DATABASE_URL="postgresql://user:password@localhost:5432/zulim"
+NODE_ENV="development"
+NEXT_PUBLIC_API_URL=""
+```
+
+### 4. Configurar Base de Datos
 
 ```bash
 pnpm prisma generate
-pnpm migrate dev --name init
+pnpm migrate
 ```
 
-### 4. Iniciar Desarrollo
+### 5. Iniciar Desarrollo
 
 ```bash
 pnpm dev
 ```
 
-Visita `http://localhost:3000`
+Visita `http://localhost:3013`
 
-## 🎨 Ejemplos de Uso
+## 🎯 Roles y Permisos
 
-### DataTable Genérica
+### Administrador
 
-```tsx
-import { DataTable } from "@/components/common";
+- Acceso completo a todos los módulos
+- Gestión de usuarios
+- Configuración del sistema
+- Reportes avanzados
 
-<DataTable
-  title="Usuarios"
-  subtitle="Gestión de usuarios del sistema"
-  columns={[
-    { key: "name", label: "Nombre" },
-    { key: "email", label: "Email" },
-  ]}
-  data={users}
-  keyExtractor={(item) => item.id}
-  onSearch={handleSearch}
-  actions={
-    <Button onClick={handleCreate}>Nuevo Usuario</Button>
-  }
-  onRowClick={(user) => handleEdit(user)}
-/>
-```
+### Vendedor
 
-### Modal Genérico
+- Punto de venta
+- Consulta de productos
+- Historial de ventas propias
+- Dashboard básico
 
-```tsx
-import { GenericModal, ConfirmModal } from "@/components/common";
+## 📦 Patrones y Mejores Prácticas
 
-<GenericModal
-  open={isOpen}
-  onOpenChange={setIsOpen}
-  title="Editar Usuario"
-  description="Modifica los datos del usuario"
-  size="lg"
->
-  {/* Contenido del modal */}
-</GenericModal>
+- **Repository Pattern** - Abstracción del acceso a datos
+- **Service Layer** - Lógica de negocio separada
+- **TypeScript Estricto** - Sin uso de `any`
+- **Constantes Centralizadas** - Sin valores hardcodeados
+- **Manejo de Errores** - Sistema centralizado de errores
+- **Código Limpio** - Funciones pequeñas y responsabilidad única
+- **REST Compliant** - APIs siguiendo estándares REST
 
-<ConfirmModal
-  open={showConfirm}
-  onOpenChange={setShowConfirm}
-  title="Eliminar Usuario"
-  description="¿Estás seguro de eliminar este usuario?"
-  onConfirm={handleDelete}
-  variant="destructive"
-/>
-```
+## 🔒 Estándares de Código
 
-### Servicio Frontend
-
-```tsx
-import { userService } from "@/services/user.service";
-import { clientErrorHandler } from "@/utils/handlers/clientError.handler";
-
-const handleCreate = async (data: CreateUserDto) => {
-  try {
-    await userService.create(data);
-    clientSuccessHandler("Usuario creado exitosamente");
-  } catch (error) {
-    clientErrorHandler(error);
-  }
-};
-```
-
-### Servicio Backend (Repository + Service)
-
-```tsx
-// Repository
-export const userRepository = {
-  async findById(id: string) {
-    return prisma.user.findUnique({ where: { id } });
-  },
-};
-
-// Service
-export const userService = {
-  async findById(id: string) {
-    const user = await userRepository.findById(id);
-    if (!user) {
-      throw new ApiError({
-        status: httpStatus.NOT_FOUND,
-        message: "Usuario no encontrado",
-      });
-    }
-    return user;
-  },
-};
-```
-
-## 🔒 Reglas de Desarrollo
-
-Este proyecto sigue estándares estrictos de calidad:
-
-- ✅ TypeScript estricto (sin `any`)
-- ✅ Sin comparaciones explícitas (`=== null`, `=== undefined`)
-- ✅ Sin valores hardcodeados (todo en constantes)
+- ✅ TypeScript estricto
+- ✅ Sin comparaciones explícitas con null/undefined
 - ✅ Nombres descriptivos y semánticos
-- ✅ Funciones pequeñas con una sola responsabilidad
 - ✅ Principios SOLID
-- ✅ Endpoints REST compliant
+- ✅ Validación de datos con Zod
 - ✅ Manejo centralizado de errores
+- ✅ Código formateado con Prettier
 
-## 📁 Estructura de Archivos Clave
+## 📱 Capturas de Pantalla
 
-| Archivo | Propósito |
-|---------|-----------|
-| `src/constants/routes.ts` | Rutas de la app y API |
-| `src/constants/config.constant.ts` | Configuración global |
-| `src/constants/error-messages.constant.ts` | Mensajes de error |
-| `src/lib/prisma.ts` | Cliente Prisma singleton |
-| `src/utils/clientAxios.util.ts` | Instancia Axios configurada |
-| `src/components/common/` | Componentes reutilizables |
+_Sistema en desarrollo - Capturas próximamente_
 
-## 🎯 Cuándo Usar Esta Plantilla
+## 🚀 Roadmap
 
-Ideal para:
+- [ ] Sistema de reportes avanzados
+- [ ] Integración con impresoras térmicas
+- [ ] Módulo de compras a proveedores
+- [ ] Sistema de notificaciones en tiempo real
+- [ ] Aplicación móvil
+- [ ] Integración con pasarelas de pago
 
-- ✅ Sistemas de gestión administrativa
-- ✅ Dashboards y paneles de control
-- ✅ APIs REST con Next.js App Router
-- ✅ Aplicaciones CRUD complejas
-- ✅ Proyectos que requieren escalabilidad
+## 👨‍💻 Desarrollador
 
-No recomendado para:
+**Matias Ahumada**
 
-- ❌ Landing pages simples
-- ❌ Blogs estáticos
-- ❌ Prototipos rápidos sin necesidad de arquitectura
-
-## 🤝 Contribución
-
-Esta plantilla está diseñada para ser extendida. Para agregar nuevas funcionalidades:
-
-1. **Repositorios**: Crea en `src/server/repository/`
-2. **Servicios Backend**: Crea en `src/server/services/`
-3. **Servicios Frontend**: Crea en `src/services/`
-4. **Componentes**: Agrega en `src/components/common/` si son reutilizables
-5. **Constantes**: Centraliza en `src/constants/`
+- 📱 Tel: 3813528658
+- 💼 Desarrollador Full Stack
+- 🎯 Especializado en Next.js, TypeScript y PostgreSQL
 
 ## 📄 Licencia
 
-MIT - Libre uso para proyectos personales y comerciales.
+Todos los derechos reservados © 2025 Matias Ahumada
 
 ---
 
-**Desarrollado con ❤️ usando Next.js, TypeScript y las mejores prácticas de la industria.**
+**Desarrollado con ❤️ por Matias Ahumada usando Next.js, TypeScript y las mejores prácticas de la industria.**

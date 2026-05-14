@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Cancel01Icon } from "hugeicons-react";
 import { useReducedMotion } from "framer-motion";
+import { UI_TEXT } from "@/constants/ui-text.constant";
 
 interface GenericModalProps {
   open: boolean;
@@ -38,10 +39,10 @@ export function GenericModal({
   const isDark = variant === "dark";
   const shouldReduceMotion = useReducedMotion();
 
-  const bgClass = isDark ? "bg-onyx" : "bg-neutral-950";
-  const headerBgClass = isDark ? "bg-neutral-950" : "bg-neutral-900";
-  const footerBgClass = isDark ? "bg-neutral-950" : "bg-neutral-900";
-  const contentBgClass = isDark ? "bg-onyx" : "bg-neutral-950";
+  const bgClass = isDark ? "bg-white" : "bg-white";
+  const headerBgClass = isDark ? "bg-[#f4effa]" : "bg-[#f4effa]";
+  const footerBgClass = isDark ? "bg-[#f4effa]" : "bg-[#f4effa]";
+  const contentBgClass = isDark ? "bg-white" : "bg-white";
 
   const modalVariants = {
     hidden: { opacity: 0, scale: 0.95, y: 20 },
@@ -50,7 +51,7 @@ export function GenericModal({
       scale: 1,
       y: 0,
       transition: {
-        type: "spring",
+        type: "spring" as const,
         stiffness: 300,
         damping: 30,
       },
@@ -60,7 +61,7 @@ export function GenericModal({
       scale: 0.95,
       y: 20,
       transition: {
-        type: "spring",
+        type: "spring" as const,
         stiffness: 300,
         damping: 30,
       },
@@ -105,26 +106,24 @@ export function GenericModal({
             className="fixed inset-0 z-50 flex items-center justify-center p-4 pointer-events-none"
           >
             <div
-              className={`${bgClass} border border-neutral-800 rounded-xl shadow-2xl ${SIZE_CLASSES[size]} w-full max-h-[90vh] overflow-y-auto pointer-events-auto`}
+              className={`${bgClass} border border-[#c8b1e4] rounded-xl shadow-2xl ${SIZE_CLASSES[size]} w-full max-h-[90vh] overflow-y-auto pointer-events-auto`}
             >
               <div
-                className={`flex items-center justify-between p-6 border-b border-neutral-800 ${headerBgClass}`}
+                className={`flex items-center justify-between p-6 border-b border-[#c8b1e4] ${headerBgClass}`}
               >
                 <div>
-                  <h2 className="text-lg font-semibold text-white">
+                  <h2 className="text-lg font-semibold text-[#2f184b]">
                     {title}
                   </h2>
                   {description && (
-                    <p className="text-sm text-neutral-400 mt-1">
-                      {description}
-                    </p>
+                    <p className="text-sm text-[#4a4451] mt-1">{description}</p>
                   )}
                 </div>
                 <Button
                   variant="ghost"
                   size="icon"
                   onClick={() => onOpenChange(false)}
-                  className="text-neutral-400 hover:text-white hover:bg-neutral-800"
+                  className="text-[#4a4451] hover:text-[#2f184b] hover:bg-[#c8b1e4]/30"
                 >
                   <Cancel01Icon size={20} />
                 </Button>
@@ -132,7 +131,7 @@ export function GenericModal({
               <div className={`p-6 ${contentBgClass}`}>{children}</div>
               {footer && (
                 <div
-                  className={`flex justify-end gap-2 p-6 border-t border-neutral-800 ${footerBgClass}`}
+                  className={`flex justify-end gap-2 p-6 border-t border-[#c8b1e4] ${footerBgClass}`}
                 >
                   {footer}
                 </div>
@@ -165,8 +164,8 @@ export function ConfirmModal({
   description,
   onConfirm,
   onCancel,
-  confirmText = "Confirmar",
-  cancelText = "Cancelar",
+  confirmText = UI_TEXT.MODAL.CONFIRM_TEXT,
+  cancelText = UI_TEXT.MODAL.CANCEL_TEXT,
   variant = "default",
   loading = false,
 }: ConfirmModalProps) {
@@ -192,12 +191,12 @@ export function ConfirmModal({
             {cancelText}
           </Button>
           <Button variant={variant} onClick={handleConfirm} disabled={loading}>
-            {loading ? "Procesando..." : confirmText}
+            {loading ? UI_TEXT.MODAL.PROCESSING : confirmText}
           </Button>
         </>
       }
     >
-      <p className="text-sm text-neutral-400">{description}</p>
+      <p className="text-sm text-[#4a4451]">{description}</p>
     </GenericModal>
   );
 }

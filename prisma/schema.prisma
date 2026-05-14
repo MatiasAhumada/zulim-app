@@ -1,15 +1,208 @@
-generator client {
-  provider = "prisma-client-js"
-}
-
+// Configuración de base de datos para PostgreSQL
 datasource db {
   provider = "postgresql"
 }
 
+generator client {
+  provider = "prisma-client-js"
+}
+
+// 0. Usuarios y Auth
+enum Role {
+  ADMIN
+  SELLER
+}
+
 model User {
   id        String   @id @default(cuid())
-  name      String
   email     String   @unique
+  password  String
+  name      String
+  role      Role     @default(SELLER)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+// 1. Proveedores
+model Supplier {
+  id            String         @id @default(uuid())
+  name          String         @unique
+  phone         String?
+  email         String?
+  address       String?
+  brands        Brand[]
+  pricingRules  PricingRule[]
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+}
+
+// 1.1 Reglas de Pricing por Proveedor/Marca
+model PricingRule {
+  id                    String   @id @default(uuid())
+  name                  String   // "ABRAFIC Estándar", "Cordón de Oro 2025"
+  
+  // Relaciones
+  supplierId            String?
+  supplier              Supplier? @relation(fields: [supplierId], references: [id])
+  brandId               String?
+  brand                 Brand?    @relation(fields: [brandId], references: [id])
+  
+  // Multiplicadores de precio (sobre costo + IVA)
+  pricePerMeterMultiplier      Float   @default(3.1)   // xmtr
+  pricePerPieceMultiplier      Float   @default(2.1)   // xpza
+  wholesalePriceMultiplier     Float   @default(1.7)   // xmay
+  maxDiscountPriceMultiplier   Float   @default(1.5)   // MAX
+  
+  // Descuento de fábrica (0.9 = 10% descuento, 0.66 = 34% descuento)
+  factoryDiscountMultiplier    Float   @default(1.0)   // c/el dscto
+  
+  // IVA aplicable
+  taxRate                      Float   @default(1.21)  // 21% IVA Argentina
+  
+  // Reglas de cantidad
+  wholesaleMinQuantity         Int?    // 6 o+
+  maxDiscountMinQuantity       Int?    // 10 o+
+  
+  isActive                     Boolean @default(true)
+  validFrom                    DateTime @default(now())
+  validUntil                   DateTime?
+  
+  createdAt                    DateTime @default(now())
+  updatedAt                    DateTime @updatedAt
+  
+  @@unique([supplierId, brandId, name])
+}
+
+// 2. Marcas
+model Brand {
+  id           String        @id @default(uuid())
+  name         String
+  supplierId   String
+  supplier     Supplier      @relation(fields: [supplierId], references: [id])
+  
+  // Configuración específica de la marca
+  config       Json?         // Estructura flexible para cada marca
+  
+  categories   Category[]
+  pricingRules PricingRule[]
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+
+  @@unique([name, supplierId])
+}
+
+// 3. Categorías (Producto Base)
+model Category {
+  id        String    @id @default(uuid())
+  name      String
+  brandId   String
+  brand     Brand     @relation(fields: [brandId], references: [id])
+  products  Product[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  @@unique([name, brandId])
+}
+
+// 4. Catálogo de Productos (Variantes)
+model Product {
+  id                String         @id @default(uuid())
+  name              String         // Variante del producto
+  sku               String         @unique
+  description       String?
+  unitType          UnitType       // KG, METERS, UNIT
+  
+  // Relación con Categoría
+  categoryId        String
+  category          Category       @relation(fields: [categoryId], references: [id])
+  
+  // Cantidades
+  quantityPerPiece  Float?         // Metros por pieza (ABRAFIC)
+  minSaleQuantity   Float          @default(1)
+  maxSaleQuantity   Float?
+  
+  // Precios
+  pricePerMeter     Decimal?       @db.Decimal(10, 2) // xmtr
+  pricePerPiece     Decimal        @db.Decimal(10, 2) // xpza
+  wholesalePrice    Decimal        @db.Decimal(10, 2) // xmay
+  maxDiscountPrice  Decimal?       @db.Decimal(10, 2) // MAX
+  factoryDiscountPrice Decimal?    @db.Decimal(10, 2) // c/el dscto
+  costPrice         Decimal        @db.Decimal(10, 2) // costo
+  
+  // Reglas de negocio
+  wholesaleMinQty   Int?           // 6 o+
+  maxDiscountMinQty Int?           // 10 o+
+  
+  // Calculados
+  profitMargin      Float
+  stock             Float          @default(0)
+  
+  // Relaciones
+  priceHistory      PriceHistory[]
+  saleItems         SaleItem[]
+  
+  createdAt         DateTime       @default(now())
+  updatedAt         DateTime       @updatedAt
+}
+
+// 3. Historial de Precios (Métricas de Inflación)
+model PriceHistory {
+  id                String   @id @default(uuid())
+  productId         String
+  product           Product  @relation(fields: [productId], references: [id])
+  
+  oldPurchasePrice  Decimal  @db.Decimal(10, 2)
+  newPurchasePrice  Decimal  @db.Decimal(10, 2)
+  oldSalePrice      Decimal  @db.Decimal(10, 2)
+  newSalePrice      Decimal  @db.Decimal(10, 2)
+  
+  changeDate        DateTime @default(now())
+  reason            String?  // Ej: "Carga Masiva Excel" o "Ajuste Manual"
+}
+
+// 4. Ventas y Facturación
+model Sale {
+  id                String      @id @default(uuid())
+  totalAmount       Decimal     @db.Decimal(10, 2)
+  roundedAmount     Decimal     @db.Decimal(10, 2) // Valor final a la centena
+  paymentMethod     String      // Efectivo, Transferencia, etc.
+  
+  // Integración AFIP
+  invoiceType       String?     // A, B, C o Ticket
+  cae               String?     // Código de Autorización Electrónico de AFIP
+  caeExpiration     DateTime?
+  
+  clientId          String?
+  client            Client?     @relation(fields: [clientId], references: [id])
+  items             SaleItem[]
+  
+  createdAt         DateTime    @default(now())
+}
+
+model SaleItem {
+  id                String   @id @default(uuid())
+  saleId            String
+  sale              Sale     @relation(fields: [saleId], references: [id])
+  productId         String
+  product           Product  @relation(fields: [productId], references: [id])
+  
+  quantity          Float
+  priceAtSale       Decimal  @db.Decimal(10, 2)
+}
+
+// 5. Clientes (Adaptado para AFIP)
+model Client {
+  id                String   @id @default(uuid())
+  name              String   // Razón Social o Nombre
+  taxId             String   @unique // CUIT/CUIL/DNI para AFIP
+  taxCondition      String   // Responsable Inscripto, Monotributo, Consumidor Final
+  address           String?
+  email             String?
+  sales             Sale[]
+}
+
+enum UnitType {
+  KG
+  METERS
+  UNIT
 }
